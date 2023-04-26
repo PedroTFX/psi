@@ -4,7 +4,7 @@ import { User } from './types/User';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class UserService {
 
@@ -16,5 +16,9 @@ export class UserService {
 
 	createUser(user: User): Observable<any> {
 		return this.http.post<User>('http://localhost:3000/api/create-account', user, this.httpOptions)
+	}
+
+	login(user: User): Observable<any> {
+		return this.http.post<User>('http://localhost:3000/api/login', user, this.httpOptions)
 	}
 }
