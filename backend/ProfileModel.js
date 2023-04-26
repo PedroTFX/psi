@@ -2,11 +2,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const heroSchema = new Schema({
-  name: String,
-  pet: { type: Schema.Types.ObjectId, ref: 'Pet' }
+const profileSchema = new Schema({
+
 })
 
-const Hero = mongoose.model('Hero', heroSchema)
+const Profile = mongoose.model('Profile', profileSchema)
 
-module.exports = Hero
+module.exports = Profile
