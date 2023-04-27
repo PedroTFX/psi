@@ -1,0 +1,12 @@
+<form class="flex flex-col prose">
+
+	<h2 class="text-center">Login</h2>
+
+	<label>Username</label>
+	<input type="text" name="username" class="border rounded-full px-2" required minlength="3" [(ngModel)]="username" />
+
+	<label class="mt-7" >Password</label>
+	<input type="password" name="password" class="border rounded-full px-2" required minlength="8" [(ngModel)]="password" />
+
+	<button type="button" class="bg-sky-800 rounded-full text-white p-2 mt-7" (click)="login()">login</button>
+</form>
