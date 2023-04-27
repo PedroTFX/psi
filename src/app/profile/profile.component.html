@@ -1,1 +1,8 @@
-<p>profile works!</p>
+<h2>Welcome, {{ user.name }}!</h2>
+<p>Age: {{ profile.age }}</p>
+<p>Gender: {{ profile.gender }}</p>
+<p>Number of Games: {{ profile.numberOfGames }}</p>
+<ul>
+  <li *ngFor="let game of profile.historyOfGames">{{ game }}</li>
+</ul>
+

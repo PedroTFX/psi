@@ -6,5 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-
+  user = {
+    name: '',
+    passWord: ''
+  };
+  profile = {
+    age: null,
+    gender: '',
+    numberOfGames: null,
+    historyOfGames: []
+  };
 }
