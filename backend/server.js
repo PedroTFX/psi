@@ -10,6 +10,8 @@ const app = express();
 const port = 3000;
 const Profile = require("./ProfileModel.js");
 const User = require("./UserModel.js");
+const Game = require("./GameModel.js");
+const GameList = require("./GameListModel.js");
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const { ObjectId } = require('mongodb');
 
@@ -47,9 +49,9 @@ app.get('/init', async function (req, res) {
   await collectionUsers.insertOne(user1);
   let user2 = new User({ name: 'Diogo', passWord: "Diogo4321" });
   await collectionUsers.insertOne(user2);
-  let profile1 = new Profile({_id: user1._id,age: 16, gender: 'M' , numberOfGames :0, historyOfGames: []});
+  let profile1 = new Profile({_id : user1._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile1);
-  let profile2 = new Profile({_id: user2._id,age: 21, gender: 'M' , numberOfGames :0, historyOfGames: []});
+  let profile2 = new Profile({_id : user2._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile2);
   console.log('Get \init');
   res.send().status(200);
