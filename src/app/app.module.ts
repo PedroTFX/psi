@@ -10,6 +10,8 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ItemSearchComponent } from './item-search/item-search.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
 
 @NgModule({
 	declarations: [
@@ -18,7 +20,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 		FooterComponent,
 		CreateAccountComponent,
 		LoginComponent,
-  DashboardComponent,
+  		DashboardComponent,
+		ItemSearchComponent,
+  ItemDetailComponent
 	],
 	imports: [
 		BrowserModule,
