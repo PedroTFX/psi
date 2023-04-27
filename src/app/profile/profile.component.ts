@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -11,9 +12,20 @@ export class ProfileComponent {
     passWord: ''
   };
   profile = {
-    age: null,
-    gender: '',
-    numberOfGames: null,
-    historyOfGames: []
+    image: null,
+    lists: [],
+    library: []
   };
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    // Replace the URL with the API endpoint that returns the user's profile information
+    const url = 'https://api.example.com/profile';
+    this.http.get(url).subscribe((data: any) => {
+      this.user = data.user;
+      this.profile = data.profile;
+    });
+  }
 }
+
