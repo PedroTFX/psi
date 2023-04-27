@@ -3,10 +3,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const profileSchema = new Schema({
-    age: Number,
-    gender:String,
-    numberOfGames:Number,
-    historyOfGames: [String]
+    // _id: String, // _id: is the one that is on the userSchema (both _id are the same)
+    // name: is the one that is on the userSchema (both name are the same)
+    image: Buffer,
+    lists: [{ type: Schema.Types.ObjectId, ref: 'GameList' }],
+    library: [{ type: Schema.Types.ObjectId, ref: 'Game' }]
 })
 
 const Profile = mongoose.model('Profile', profileSchema)
