@@ -21,10 +21,13 @@ export class LoginComponent {
 			this.formError = result.formError || ''
 
 			if (result.user) {
-				console.log(result.user)
-				this.router.navigate(['/dashboard'])
+				console.log(result.user);
+				
+				// Store the current user's ID in local storage
+				localStorage.setItem('currentUser', result.user.id);
+				
+				this.router.navigate(['/dashboard']);
 			}
 		})
 	}
-
 }
