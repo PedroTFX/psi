@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ItemService } from './item.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
