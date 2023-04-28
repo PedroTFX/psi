@@ -1,1 +1,35 @@
-<p>dashboard works!</p>
+<div class="prose">
+	<h2>Dashboard</h2>
+	<div *ngIf="dashboard != null">
+		<h2>{{dashboard.username}}</h2>
+		<img *ngIf="dashboard.image" [src]="dashboard.image" alt="Photo">
+		<h3>Jogos Comprados</h3>
+		<ng-container *ngIf="dashboard.library.length > 0; then hasPurchasedGames; else noPurchasedGames"></ng-container>
+		<h3>Listas de jogos</h3>
+		<div *ngFor="let list of dashboard.lists">
+			<h3>{{ list.name }}</h3>
+			<ul>
+				<li *ngFor="let game of list.games">{{ game.name }}</li>
+			</ul>
+		</div>
+		<h3>Jogadores que estamos a seguir</h3>
+		<ul>
+			<li *ngFor="let profile of dashboard.following">{{ profile.username }}</li>
+		</ul>
+		<h3>Jogadores que nos seguem</h3>
+		<ul>
+			<li *ngFor="let profile of dashboard.followers">{{ profile.username }}</li>
+		</ul>
+	</div>
+</div>
+
+
+<ng-template #hasPurchasedGames>
+	<ul>
+		<li *ngFor="let game of dashboard?.library">{{ game.name }}</li>
+	</ul>
+</ng-template>
+
+<ng-template #noPurchasedGames>
+	<p>You haven't purchased any games yet.</p>
+</ng-template>
