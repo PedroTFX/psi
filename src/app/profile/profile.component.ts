@@ -26,11 +26,15 @@ export class ProfileComponent {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Replace the URL with the API endpoint that returns the user's profile information
-    const url = 'https://api.example.com/profile';
+    // Retrieve the current user's ID from local storage
+    const currentUser = localStorage.getItem('currentUser');
+  
+    // Call the server to retrieve the user's information
+    const url = `https://api.example.com/users/${currentUser}/profile`;
     this.http.get(url).subscribe((data: any) => {
       this.user = data.user;
       this.profile = data.profile;
     });
   }
 }
+
