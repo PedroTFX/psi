@@ -49,6 +49,11 @@ app.get('/init', async function (req, res) {
   await collectionUsers.insertOne(user1);
   let user2 = new User({ name: 'Diogo', passWord: "Diogo4321" });
   await collectionUsers.insertOne(user2);
+  let user3 = new User({ name: 'Luis', passWord: "_white" });
+  await collectionUsers.insertOne(user3);
+  let user4 = new User({ name: 'Pedro', passWord: "alone_daguel" });
+  await collectionUsers.insertOne(user4);
+
   let profile1 = new Profile({_id : user1._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile1);
   let profile2 = new Profile({_id : user2._id, image:null, lists:[], library:[]});
@@ -58,7 +63,7 @@ app.get('/init', async function (req, res) {
 });
 
 ///////////////////////////////User Related
-app.get('/api/user/:id', async function(req, res) {
+app.get('/api/users/:id', async function(req, res) {
   // Lógica para obter um user específico da base de dados pelo ID
   let collection = await db.collection(usersDB);
     let query = {_id: new ObjectId(req.params.id)};
@@ -80,7 +85,7 @@ let collection = await db.collection(usersDB);
 });
 
 ///////////////////////////////Profile Related
-app.get('/api/profile/:id', async function(req, res) {
+app.get('/api/profiles/:id', async function(req, res) {
   // Lógica para obter um profile específico da base de dados pelo ID
   let collection = await db.collection(profilesDB);
     let query = {_id: new ObjectId(req.params.id)};
