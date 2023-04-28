@@ -1,7 +1,7 @@
 <h2>Profile</h2>
 <div *ngIf="profile != null">
-	<h2>{{profile.username}}</h2>
-	<img [src]="profile.image" alt="Photo">
+	<h2>{{profile?.username}}</h2>
+	<img [src]="profile?.image" alt="Photo">
 	<h3>Game Lists:</h3>
 	<ul>
 		<li *ngFor="let game of profile.lists">{{ game.name }}</li>
