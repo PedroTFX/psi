@@ -1,5 +1,11 @@
 /**
  * Arquivo: server.js
+ * 
+ * Estrutura do Back-End:
+ *   Get: Buscar uma ou mais informações do Back-End
+ *   Post: Criar uma nova informação no Back-End
+ *   Put: Atualizar uma informação existente no Back-End
+ *   Delete: Remover uma informação do Back-End
  */
 const express = require('express');
 const mongoose = require('mongoose');
@@ -89,7 +95,7 @@ app.get('/init', async function (req, res) {
   await db.collection(gamesDB).insertOne(game3);
 
   //////GameLists
-  let gameList1 = new GameList({name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
+  let gameList1 = new GameList({creator:user1, followers:[user1], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
   await db.collection(gameListsDB).insertOne(gameList1);
    
   console.log('Get \init');
@@ -117,6 +123,30 @@ let collection = await db.collection(usersDB);
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
+
+app.post('/users', async (req, res) => {
+  const user = new User({
+    name: req.body.name,
+    passWord: req.body.passWord
+  });
+  await user.save();
+  res.send(user);
+});
+
+
+app.put('/users/:id', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    passWord: req.body.passWord
+  }, { new: true });
+  res.send(user);
+});
+
+app.delete('/users/:id', async (req, res) => {
+  const user = await User.findByIdAndRemove(req.params.id);
+  res.send(user);
+});
+
 
 ///////////////////////////////Profile Related
 app.get('/api/profiles/:id', async function(req, res) {
@@ -148,6 +178,35 @@ app.get('/api/profile/:user', async function(req, res) {
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
 });
+
+app.post('/profiles', async (req, res) => {
+  const profile = new Profile({
+    user: req.body.user,
+    name: req.body.name,
+    description: req.body.description,
+    image: req.body.image,
+    gameLists: req.body.gameLists
+  });
+  await profile.save();
+  res.send(profile);
+});
+
+app.put('/profiles/:id', async (req, res) => {
+  const profile = await Profile.findByIdAndUpdate(req.params.id, {
+    user: req.body.user,
+    name: req.body.name,
+    description: req.body.description,
+    image: req.body.image,
+    gameLists: req.body.gameLists
+  }, { new: true });
+  res.send(profile);
+});
+
+app.delete('/profiles/:id', async (req, res) => {
+  const profile = await Profile.findByIdAndRemove(req.params.id);
+  res.send(profile);
+});
+
 ///////////////////////////////Game Related
 app.get('/api/games/:id', async function(req, res) {
   // Lógica para obter um game específico da base de dados pelo ID
@@ -168,6 +227,28 @@ let collection = await db.collection(gamesDB);
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
+
+app.post('/games', async (req, res) => {
+  const game = new Game({
+    name: req.body.name,
+    description: req.body.description,
+    image: req.body.image,
+    gameLists: req.body.gameLists
+  });
+  await game.save();
+  res.send(game);
+});
+
+app.put('/games/:id', async (req, res) => {
+  const game = await Game.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    description: req.body.description,
+    image: req.body.image,
+    gameLists: req.body.gameLists
+  }, { new: true });
+  res.send(game);
+});
+
 ///////////////////////////////GameList Related
 app.get('/api/gamelists/:id', async function(req, res) {
   // Lógica para obter um gamelist específico da base de dados pelo ID
@@ -190,8 +271,29 @@ app.get('/api/gamelists', async function(req, res) {
   else res.send(result).status(200);
 });
 
+app.post('/gamelists', async (req, res) => {
+  const gameList = new GameList({
+    name: req.body.name,
+    description: req.body.description,
+    games: req.body.games
+  });
+  await gameList.save();
+  res.send(gameList);
+});
 
+app.put('/gamelists/:id', async (req, res) => {
+  const gameList = await GameList.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    description: req.body.description,
+    games: req.body.games
+  }, { new: true });
+  res.send(gameList);
+});
 
+app.delete('/gamelists/:id', async (req, res) => {
+  const gameList = await GameList.findByIdAndRemove(req.params.id);
+  res.send(gameList);
+});
 
 // Iniciar o servidor
 app.listen(port, function () {
