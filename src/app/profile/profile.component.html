@@ -1,12 +1,12 @@
-<h2>Welcome, {{ user.name }}!</h2>
-<img [src]="profile.image" alt="Profile Image">
-<h3>Game Lists:</h3>
-<ul>
-  <li *ngFor="let list of profile.lists">{{ list.name }}</li>
-</ul>
-<h3>Library:</h3>
-<ul>
-  <li *ngFor="let game of profile.library">{{ game.name }}</li>
-</ul>
-
-
+<h2>Profile</h2>
+<div *ngIf="profile != null">
+	<img [src]="profile.image" alt="Photo">
+	<h3>Game Lists:</h3>
+	<ul>
+		<li *ngFor="let game of profile.lists">{{ game.name }}</li>
+	</ul>
+	<h3>Library:</h3>
+	<ul>
+		<li *ngFor="let game of profile.library">{{ game.name }}</li>
+	</ul>
+</div>
