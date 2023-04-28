@@ -10,6 +10,8 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ItemSearchComponent } from './item-search/item-search.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
@@ -19,7 +21,9 @@ import { ProfileComponent } from './profile/profile.component';
 		FooterComponent,
 		CreateAccountComponent,
 		LoginComponent,
-  		DashboardComponent,
+  				DashboardComponent,
+		ItemSearchComponent,
+  		ItemDetailComponent,
   		ProfileComponent
 	],
 	imports: [
