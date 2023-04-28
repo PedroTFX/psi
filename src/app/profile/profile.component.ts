@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+interface Profile {
+  image: string | null;
+  lists: { name: string }[];
+  library: { name: string }[];
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -11,7 +17,7 @@ export class ProfileComponent {
     name: '',
     passWord: ''
   };
-  profile = {
+  profile: Profile = {
     image: null,
     lists: [],
     library: []
@@ -28,4 +34,3 @@ export class ProfileComponent {
     });
   }
 }
-
