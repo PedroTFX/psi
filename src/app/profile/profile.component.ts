@@ -2,12 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProfileService } from '../profile.service';
 import { Router } from '@angular/router';
-
-interface Profile {
-	image: string;
-	lists: { name: string }[];
-	library: { name: string }[];
-}
+import { Profile } from '../types/Profile';
 
 @Component({
 	selector: 'app-profile',
@@ -22,11 +17,11 @@ export class ProfileComponent {
 
 	ngOnInit() {
 		this.profileService.get().subscribe((result) => {
-			console.log(result)
-			if (result.error) {
-				//this.router.navigate(['/login'])
+			const { error, ...profile } = result
+			if (error) {
+				this.router.navigate(['/login'])
 			}
-			this.profile = result
+			this.profile = profile
 		})
 	}
 }
