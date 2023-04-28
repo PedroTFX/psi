@@ -12,7 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
-import { ItemsComponent } from './items/items.component';
 
 @NgModule({
 	declarations: [
@@ -23,8 +22,7 @@ import { ItemsComponent } from './items/items.component';
 		LoginComponent,
   		DashboardComponent,
 		ItemSearchComponent,
-  ItemDetailComponent,
-  ItemsComponent
+  		ItemDetailComponent
 	],
 	imports: [
 		BrowserModule,
