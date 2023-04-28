@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ItemService } from './item.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ProjetoPSI';
+
 }
