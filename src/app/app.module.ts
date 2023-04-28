@@ -21,7 +21,7 @@ import { ProfileComponent } from './profile/profile.component';
 		FooterComponent,
 		CreateAccountComponent,
 		LoginComponent,
-  				DashboardComponent,
+  		DashboardComponent,
 		ItemSearchComponent,
   		ItemDetailComponent,
   		ProfileComponent
