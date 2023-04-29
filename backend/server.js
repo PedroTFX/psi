@@ -18,6 +18,7 @@ const Profile = require("./ProfileModel.js");
 const User = require("./UserModel.js");
 const Game = require("./GameModel.js");
 const GameList = require("./GameListModel.js");
+const Image = require("./ImageModel.js");
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const { ObjectId } = require('mongodb');
 
@@ -26,6 +27,7 @@ const usersDB = "users";
 const profilesDB = "profiles";
 const gamesDB = "games";
 const gameListsDB = "gameLists";
+const imagesDB = "images";
 const uri = "mongodb+srv://admin:admin@app.yi0znic.mongodb.net/test";
 
 // Conexão com o MongoDB
@@ -41,26 +43,40 @@ app.use(cors());
 
 //////////////////////////////////////////Rotas///////////////////////////////////////////////////////////
 app.get('/init', async function (req, res) {
-  // Lógica para inicializar as coleções de heróis e pets com alguns valores
-  let collectionUsers = db.collection(usersDB);
-  let collectionProfiles = db.collection(profilesDB);
-  let collectionGames = db.collection(gamesDB);
-  let collectionGameLists = db.collection(gameListsDB);
-  // delete collections
-  await collectionUsers.drop();
-  await collectionProfiles.drop();
-  await collectionGames.drop();
-  await collectionGameLists.drop();
-  // create new collections
+  // Lógica para inicializar as coleções
+  ////////////////drop collections
+  const exists = await db.listCollections({ name: usersDB }).hasNext();
+  if(exists){
+    await db.collection(usersDB).drop();
+  }
+  const exists2 = await db.listCollections({ name: profilesDB }).hasNext();
+  if(exists2){
+    await db.collection(profilesDB).drop();
+  }
+  const exists3 = await db.listCollections({ name: gamesDB }).hasNext();
+  if(exists3){
+    await db.collection(gamesDB).drop();
+  }
+  const exists4 = await db.listCollections({ name: gameListsDB }).hasNext();
+  if(exists4){
+    await db.collection(gameListsDB).drop();
+  }
+  const exists5 = await db.listCollections({ name: imagesDB }).hasNext();
+  if(exists5){
+    await db.collection(imagesDB).drop();
+  }
+  ////////////////create collections
   await db.createCollection(usersDB);
   await db.createCollection(profilesDB);
   await db.createCollection(gamesDB);
   await db.createCollection(gameListsDB);
+  await db.createCollection(imagesDB);
   // acess new collections
   collectionUsers = db.collection(usersDB);
   collectionProfiles = db.collection(profilesDB);
   collectionGames = db.collection(gamesDB);
   collectionGameLists = db.collection(gameListsDB);
+  collectionImages = db.collection(imagesDB);
   ////////////////fill collections
   //////Users
   let user1 = new User({ name: 'Lucas', passWord: "Lucas1234" });
@@ -73,7 +89,25 @@ app.get('/init', async function (req, res) {
   await collectionUsers.insertOne(user4);
   let user5 = new User({ name: 'João', passWord: "João1234" });
   await collectionUsers.insertOne(user5);
-
+  //////Images
+   /*    // Read the image file from disk
+      const imagePath = path.join(__dirname, 'images', 'example.png');
+      const imageData = fs.readFileSync(imagePath);
+  
+      // Create a new Image document
+      const image = new Image({
+          data: imageData,
+          contentType: 'image/png'
+      });
+  
+      // Save the image to the database
+      image.save(function(err) {
+          if (err) {
+              console.error('Error saving image:', err);
+          } else {
+              console.log('Image saved successfully!');
+          }
+      }); */
   //////Profiles
   let profile1 = new Profile({_id : user1._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile1);

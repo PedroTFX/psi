@@ -6,7 +6,7 @@ const gameSchema = new Schema({
   // _id: String,
   name: String,
   description: String,
-  image: Buffer,
+  image: { type: Schema.Types.ObjectId, ref: 'Image' },
   genre: String,
   releaseDate: Date,
   platform: String
