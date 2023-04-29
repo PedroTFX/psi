@@ -12,7 +12,7 @@ body {
   /* Set background and text color */
   body {
     background-color: #202020;
-    color: #ffffff;
+    color: auto;
   }
   
   /* Add box-sizing: border-box to all elements */
