@@ -243,7 +243,12 @@ app.get("/api/secure", async (req, res) => {
 
 app.get('/api/search', async (req, res) => {
   const searchQuery = req.query.q;
-
+  console.log(searchQuery);
+  if(searchQuery.length == 0 || searchQuery == undefined) {
+    console.log('empty search query');
+    res.send([]);
+    return;
+  }
   try {
     const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
     const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
