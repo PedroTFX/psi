@@ -7,11 +7,10 @@
  *   Put: Atualizar uma informação existente no Back-End
  *   Delete: Remover uma informação do Back-End
  */
+const { BSON } = require('bson')
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { asyncScheduler } = require('rxjs');
 const app = express();
 const port = 3000;
 const Profile = require("./ProfileModel.js");
@@ -22,7 +21,8 @@ const Image = require("./ImageModel.js");
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const { ObjectId } = require('mongodb');
 
-
+// Databases e URI
+const databaseName = "APP";
 const usersDB = "users";
 const profilesDB = "profiles";
 const gamesDB = "games";
@@ -30,18 +30,19 @@ const gameListsDB = "gameLists";
 const imagesDB = "images";
 const uri = "mongodb+srv://admin:admin@app.yi0znic.mongodb.net/test";
 
-// Conexão com o MongoDB
+// MONGODB CONNECTION
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 client.connect();
-
-// Configuração do MongoDB 
-const db = client.db("APP");
-
+console.log("Connected to MongoDB");
+// MongoDB database
+const db = client.db(databaseName);
 // Middlewares
 app.use(bodyParser.json());
 app.use(cors());
 
-//////////////////////////////////////////Rotas///////////////////////////////////////////////////////////
+
+//////////////////////////////////////////Rotes///////////////////////////////////////////////////////////
+
 app.get('/init', async function (req, res) {
   // Lógica para inicializar as coleções
   ////////////////drop collections
@@ -65,18 +66,21 @@ app.get('/init', async function (req, res) {
   if(exists5){
     await db.collection(imagesDB).drop();
   }
+  console.log("Dropped collections");
   ////////////////create collections
   await db.createCollection(usersDB);
   await db.createCollection(profilesDB);
   await db.createCollection(gamesDB);
   await db.createCollection(gameListsDB);
   await db.createCollection(imagesDB);
-  // acess new collections
+  console.log("Created collections");
+  ////////////////access collections
   collectionUsers = db.collection(usersDB);
   collectionProfiles = db.collection(profilesDB);
   collectionGames = db.collection(gamesDB);
   collectionGameLists = db.collection(gameListsDB);
   collectionImages = db.collection(imagesDB);
+  console.log("Acessed collections");
   ////////////////fill collections
   //////Users
   let user1 = new User({ name: 'Lucas', passWord: "Lucas1234" });
@@ -89,8 +93,9 @@ app.get('/init', async function (req, res) {
   await collectionUsers.insertOne(user4);
   let user5 = new User({ name: 'João', passWord: "João1234" });
   await collectionUsers.insertOne(user5);
+  console.log("Filled users");
   //////Images
-   /*    // Read the image file from disk
+      // Read the image file from disk
       const imagePath = path.join(__dirname, 'images', 'example.png');
       const imageData = fs.readFileSync(imagePath);
   
@@ -107,7 +112,8 @@ app.get('/init', async function (req, res) {
           } else {
               console.log('Image saved successfully!');
           }
-      }); */
+      }); 
+  console.log("Filled images");
   //////Profiles
   let profile1 = new Profile({_id : user1._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile1);
@@ -119,7 +125,7 @@ app.get('/init', async function (req, res) {
   await collectionProfiles.insertOne(profile4);
   let profile5 = new Profile({_id : user5._id, image:null, lists:[], library:[]});
   await collectionProfiles.insertOne(profile5);
-
+  console.log("Filled profiles");
   //////Games
   let game1 = new Game({name: "The Witcher 3: Wild Hunt", description: "The Witcher 3: Wild Hunt is a 2015 action role-playing game developed and published by Polish developer CD Projekt Red and is based on The Witcher series of fantasy novels by Andrzej Sapkowski. It is the sequel to the 2011 game The Witcher 2: Assassins of Kings and the third main installment in the The Witcher's video game series, played in an open world with a third-person perspective. Players control protagonist Geralt of Rivia, a monster slayer (known as a Witcher) who is looking for his missing adopted daughter on the run from the Wild Hunt, an otherworldly force determined to capture her and use her powers.", image: null, genre: "RPG", platform: "PC", releaseDate: "2015-05-19"});
   await db.collection(gamesDB).insertOne(game1);
@@ -127,11 +133,17 @@ app.get('/init', async function (req, res) {
   await db.collection(gamesDB).insertOne(game2);
   let game3 = new Game({name: "The Witcher", description: "The Witcher is a 2007 action role-playing game developed by CD Projekt Red and published by Atari on Microsoft Windows and CD Projekt on OS X, based on the novel series of The Witcher by Polish author Andrzej Sapkowski, taking place after the events of the main saga. The story takes place in a medieval fantasy world and follows Geralt of Rivia, one of a few traveling monster hunters who have supernatural powers, known as Witchers. The game's system of moral choices as part of the storyline was noted for its time-delayed consequences and lack of black-and-white morality.", image: null, genre: "RPG", platform: "PC", releaseDate: "2007-10-26"});
   await db.collection(gamesDB).insertOne(game3);
-
+  console.log("Filled games");
   //////GameLists
   let gameList1 = new GameList({creator:user1, followers:[user1], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
   await db.collection(gameListsDB).insertOne(gameList1);
-   
+  let gameList2 = new GameList({creator:user2, followers:[user2], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
+  await db.collection(gameListsDB).insertOne(gameList2);
+  let gameList3 = new GameList({creator:user3, followers:[user3], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
+  await db.collection(gameListsDB).insertOne(gameList3);
+  console.log("Filled gameLists");
+
+  console.log("\t->Filled database");
   console.log('Get \init');
   res.send().status(200);
 });
