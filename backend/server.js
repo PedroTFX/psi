@@ -241,4 +241,25 @@ app.get("/api/secure", async (req, res) => {
 	return res.send(`${username} is logged in.`)
 })
 
+app.get('/api/search', async (req, res) => {
+  const searchQuery = req.query.q;
+
+  try {
+    const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
+    const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
+    const gameLists = await GameList.find({ name: { $regex: searchQuery, $options: 'i' } }).populate('games');
+
+    const searchResults = {
+      profiles,
+      games,
+      gameLists
+    };
+
+    res.json(searchResults);
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while searching for results.' });
+  }
+});
+
+
 
