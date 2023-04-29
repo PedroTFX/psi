@@ -1,1 +1,12 @@
-<p>item-search works!</p>
+<input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
+<button type="button" (click)="onSearch()">Search</button>
+
+<div *ngIf="searchResults">
+  <h2>Search Results</h2>
+  <ul>
+    <li *ngFor="let result of searchResults">
+      <a [routerLink]="['/', result.type, result._id]">{{ result.name }}</a>
+      <p>{{ result.description }}</p>
+    </li>
+  </ul>
+</div>

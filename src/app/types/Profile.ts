@@ -4,7 +4,7 @@ import { List } from "./List"
 export type Profile = {
 	_id?: string
 	username: string
-	image: string
+	image?: ImageBitmap
 	library: Game[]
 	lists: List[]
 	following: Profile[]
