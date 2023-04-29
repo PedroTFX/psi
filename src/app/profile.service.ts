@@ -7,6 +7,9 @@ import { Profile } from './types/Profile';
 	providedIn: 'root'
 })
 export class ProfileService {
+	getProfile() {
+		throw new Error('Method not implemented.');
+	}
 
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

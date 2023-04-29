@@ -9,5 +9,5 @@ export type List = {
 	description: string;
 	followers: User[];
 	owner: User;
-
+	
 }
