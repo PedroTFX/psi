@@ -1,347 +1,244 @@
 /**
- * Arquivo: server.js
+ * @file server.js
+ * @description Server file for the backend.
  * 
- * Estrutura do Back-End:
- *   Get: Buscar uma ou mais informações do Back-End
- *   Post: Criar uma nova informação no Back-End
- *   Put: Atualizar uma informação existente no Back-End
- *   Delete: Remover uma informação do Back-End
+  * This file is responsible for the backend of the application.
+  * It contains the routes and the database connection.
+  * 
  */
-const { BSON } = require('bson')
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const app = express();
-const port = 3000;
-const Profile = require("./ProfileModel.js");
-const User = require("./UserModel.js");
-const Game = require("./GameModel.js");
-const GameList = require("./GameListModel.js");
-const Image = require("./ImageModel.js");
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const { ObjectId } = require('mongodb');
+const express = require('express')
+const mongoose = require('mongoose')
+const { User } = require('./models/UserModel')
+const { Profile } = require('./models/ProfileModel')
+const { Game } = require('./models/GameModel')
+const { GameList } = require('./models/GameListModel')
+const { Image } = require('./models/ImageModel')
+var cookieSession = require('cookie-session')
+const app = express()
+const port = 3000
 
-// Databases e URI
-const databaseName = "APP";
-const usersDB = "users";
-const profilesDB = "profiles";
-const gamesDB = "games";
-const gameListsDB = "gameLists";
-const imagesDB = "images";
-const uri = "mongodb+srv://admin:admin@app.yi0znic.mongodb.net/test";
+var cors = require('cors')
+app.use(cors({
+	credentials: true,
+	origin: 'http://localhost:4200'
+}))
 
-// MONGODB CONNECTION
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect();
-console.log("Connected to MongoDB");
-// MongoDB database
-const db = client.db(databaseName);
-// Middlewares
-app.use(bodyParser.json());
-app.use(cors());
+// Coloca JSON no req.body
+app.use(express.json())
+app.use(cookieSession({
+	name: 'session',
+	keys: ['password'],
+/* 	sameSite: 'none',
+	secure: true, */
+	maxAge: 30 * 24 * 60 * 60 * 1000 // 1 month
+}))
+const connectDatabase = async () => {
+	await mongoose.connect('mongodb+srv://admin:admin@app.yi0znic.mongodb.net/test')
 
+	app.listen(port, () => {
+		console.log(`Example app listening on port ${port}..`)
+	})
+}
+connectDatabase()
 
-//////////////////////////////////////////Rotes///////////////////////////////////////////////////////////
+app.get('/api/init', async (req, res) => {
+	// Delete DB
+	await User.deleteMany();
+	await Profile.deleteMany();
+	await Game.deleteMany();
+	await GameList.deleteMany();
 
-app.get('/init', async function (req, res) {
-  // Lógica para inicializar as coleções
-  ////////////////drop collections
-  const exists = await db.listCollections({ name: usersDB }).hasNext();
-  if(exists){
-    await db.collection(usersDB).drop();
-  }
-  const exists2 = await db.listCollections({ name: profilesDB }).hasNext();
-  if(exists2){
-    await db.collection(profilesDB).drop();
-  }
-  const exists3 = await db.listCollections({ name: gamesDB }).hasNext();
-  if(exists3){
-    await db.collection(gamesDB).drop();
-  }
-  const exists4 = await db.listCollections({ name: gameListsDB }).hasNext();
-  if(exists4){
-    await db.collection(gameListsDB).drop();
-  }
-  const exists5 = await db.listCollections({ name: imagesDB }).hasNext();
-  if(exists5){
-    await db.collection(imagesDB).drop();
-  }
-  console.log("Dropped collections");
-  ////////////////create collections
-  await db.createCollection(usersDB);
-  await db.createCollection(profilesDB);
-  await db.createCollection(gamesDB);
-  await db.createCollection(gameListsDB);
-  await db.createCollection(imagesDB);
-  console.log("Created collections");
-  ////////////////access collections
-  collectionUsers = db.collection(usersDB);
-  collectionProfiles = db.collection(profilesDB);
-  collectionGames = db.collection(gamesDB);
-  collectionGameLists = db.collection(gameListsDB);
-  collectionImages = db.collection(imagesDB);
-  console.log("Acessed collections");
-  ////////////////fill collections
-  //////Users
-  let user1 = new User({ name: 'Lucas', passWord: "Lucas1234" });
-  await collectionUsers.insertOne(user1);
-  let user2 = new User({ name: 'Diogo', passWord: "Diogo4321" });
-  await collectionUsers.insertOne(user2);
-  let user3 = new User({ name: 'Luis', passWord: "_white" });
-  await collectionUsers.insertOne(user3);
-  let user4 = new User({ name: 'Pedro', passWord: "alone_daguel" });
-  await collectionUsers.insertOne(user4);
-  let user5 = new User({ name: 'João', passWord: "João1234" });
-  await collectionUsers.insertOne(user5);
-  console.log("Filled users");
-  //////Images
-      // Read the image file from disk
-      const imagePath = path.join(__dirname, 'images', 'example.png');
-      const imageData = fs.readFileSync(imagePath);
-  
-      // Create a new Image document
-      const image = new Image({
-          data: imageData,
-          contentType: 'image/png'
-      });
-  
-      // Save the image to the database
-      image.save(function(err) {
-          if (err) {
-              console.error('Error saving image:', err);
-          } else {
-              console.log('Image saved successfully!');
-          }
-      }); 
-  console.log("Filled images");
-  //////Profiles
-  let profile1 = new Profile({_id : user1._id, image:null, lists:[], library:[]});
-  await collectionProfiles.insertOne(profile1);
-  let profile2 = new Profile({_id : user2._id, image:null, lists:[], library:[]});
-  await collectionProfiles.insertOne(profile2);
-  let profile3 = new Profile({_id : user3._id, image:null, lists:[], library:[]});
-  await collectionProfiles.insertOne(profile3);
-  let profile4 = new Profile({_id : user4._id, image:null, lists:[], library:[]});
-  await collectionProfiles.insertOne(profile4);
-  let profile5 = new Profile({_id : user5._id, image:null, lists:[], library:[]});
-  await collectionProfiles.insertOne(profile5);
-  console.log("Filled profiles");
-  //////Games
-  let game1 = new Game({name: "The Witcher 3: Wild Hunt", description: "The Witcher 3: Wild Hunt is a 2015 action role-playing game developed and published by Polish developer CD Projekt Red and is based on The Witcher series of fantasy novels by Andrzej Sapkowski. It is the sequel to the 2011 game The Witcher 2: Assassins of Kings and the third main installment in the The Witcher's video game series, played in an open world with a third-person perspective. Players control protagonist Geralt of Rivia, a monster slayer (known as a Witcher) who is looking for his missing adopted daughter on the run from the Wild Hunt, an otherworldly force determined to capture her and use her powers.", image: null, genre: "RPG", platform: "PC", releaseDate: "2015-05-19"});
-  await db.collection(gamesDB).insertOne(game1);
-  let game2 = new Game({name: "The Witcher 2: Assassins of Kings", description: "The Witcher 2: Assassins of Kings is a 2011 action role-playing hack and slash video game developed by CD Projekt Red, based on The Witcher series of fantasy novels by Andrzej Sapkowski. It is the sequel to the 2007 game The Witcher and the second main installment in The Witcher's video game series. Like its predecessor, the game has an open-world setting. The player controls Geralt of Rivia, a monster slayer for hire known as a Witcher, who is looking for his missing adopted daughter on the run from the Wild Hunt, an otherworldly force determined to capture her and use her powers.", image: null, genre: "RPG", platform: "PC", releaseDate: "2011-05-17"});
-  await db.collection(gamesDB).insertOne(game2);
-  let game3 = new Game({name: "The Witcher", description: "The Witcher is a 2007 action role-playing game developed by CD Projekt Red and published by Atari on Microsoft Windows and CD Projekt on OS X, based on the novel series of The Witcher by Polish author Andrzej Sapkowski, taking place after the events of the main saga. The story takes place in a medieval fantasy world and follows Geralt of Rivia, one of a few traveling monster hunters who have supernatural powers, known as Witchers. The game's system of moral choices as part of the storyline was noted for its time-delayed consequences and lack of black-and-white morality.", image: null, genre: "RPG", platform: "PC", releaseDate: "2007-10-26"});
-  await db.collection(gamesDB).insertOne(game3);
-  console.log("Filled games");
-  //////GameLists
-  let gameList1 = new GameList({creator:user1, followers:[user1], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
-  await db.collection(gameListsDB).insertOne(gameList1);
-  let gameList2 = new GameList({creator:user2, followers:[user2], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
-  await db.collection(gameListsDB).insertOne(gameList2);
-  let gameList3 = new GameList({creator:user3, followers:[user3], name: "RPGs", description: "RPGs that I like", games: [game1._id, game2._id, game3._id]});
-  await db.collection(gameListsDB).insertOne(gameList3);
-  console.log("Filled gameLists");
+	// Seed DB
+	const newUsers = await User.insertMany([
+		{ username: 'Lucas', password: "Lucas1234" },
+		{ username: 'Diogo', password: "Diogo4321" }
+	], { lean: true })
 
-  console.log("\t->Filled database");
-  console.log('Get \init');
-  res.send().status(200);
+	const newGames = await Game.insertMany([
+		{ name: "League of Legends" },
+		{ name: "CS:GO" },
+		{ name: "CS 1.6" },
+		{ name: "Super Tux" },
+	], { lean: true })
+
+	const lucasLists = await GameList.insertMany([
+		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
+		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
+	])
+	const diogoLists = await GameList.insertMany([
+		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
+		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
+	])
+
+	// Create profiles
+	const lucasProfile = new Profile({
+		userId: newUsers[0]._id,
+		username: newUsers[0].username,
+		image: '',
+		library: [newGames[0]._id, newGames[1]._id],
+		lists: [lucasLists[0]._id, lucasLists[1]._id],
+		followers: [],
+		following: []
+	})
+	const createdLucasProfile = await lucasProfile.save()
+	const diogoProfile = new Profile({
+		userId: newUsers[1]._id,
+		username: newUsers[1].username,
+		image: '',
+		library: [newGames[2]._id, newGames[3]._id],
+		lists: [diogoLists[0]._id, diogoLists[1]._id],
+		followers: [],
+		following: []
+	})
+	const createdDiogoProfile = await diogoProfile.save()
+
+	// Add Diogo as Lucas's follower
+	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
+		followers: [createdDiogoProfile._id]
+	})
+	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
+		following: [createdLucasProfile._id]
+	})
+
+	// Add Lucas as Diogo's follower
+	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
+		followers: [createdLucasProfile._id]
+	})
+	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
+		following: [createdDiogoProfile._id]
+	})
+
+	res.send("Database seeded");
 });
 
-///////////////////////////////User Related
-app.get('/api/users/:id', async function(req, res) {
-  // Lógica para obter um user específico da base de dados pelo ID
-  let collection = await db.collection(usersDB);
-    let query = {_id: new ObjectId(req.params.id)};
-    let result = await collection.findOne(query);
-    console.log('Get /api/user/:id');
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-});
+app.get('/api', async (req, res) => {
+	res.send('Hello World!')
+})
 
-app.get('/api/users', async function(req, res) {
-// Lógica para obter todos os users da base de dados
-let collection = await db.collection(usersDB);
-  let result = await collection.find({})
-    .limit(50)
-    .toArray();
-  console.log('Get /api/users');
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
+app.post('/api/create-account', async (req, res) => {
+	const { username, password } = req.body
 
-app.post('/users', async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    passWord: req.body.passWord
-  });
-  await user.save();
-  res.send(user);
-});
+	// Check if username has more than 3 characters
+	if (username.length < 3) {
+		return res.send({
+			usernameError: 'Username needs to have more than 3 characters.'
+		})
+	}
+
+	// Check if username only has numbers and letters
+	const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(username)
+	if (!isAlphanumeric(username)) {
+		return res.send({
+			usernameError: 'Username can only have numbers and letters.'
+		})
+	}
+
+	// Check if username is unique
+	const userExists = await User.findOne({ username }).exec()
+	if (userExists) {
+		return res.send({
+			formError: 'Username already taken.'
+		})
+	}
+
+	// Password must have 8 or more characters
+	if (password.length < 8) {
+		return res.send({
+			passwordError: 'Password must have at least 8 characters.'
+		})
+	}
+
+	// Must include at least one capital letter
+	const containsUppercase = (str) => /[A-Z]/.test(str)
+	if (!containsUppercase(password)) {
+		return res.send({
+			passwordError: 'Password must have at least 1 uppercase character.'
+		})
+	}
+
+	// Must include at least one capital letter
+	const containsLowercase = (str) => /[a-z]/.test(str)
+	if (!containsLowercase(password)) {
+		return res.send({
+			passwordError: 'Password must have at least 1 lowercase character.'
+		})
+	}
+
+	// Must include at least one digit
+	const containsNumbers = (str) => /[0-9]/.test(str)
+	if (!containsNumbers(password)) {
+		return res.send({
+			passwordError: 'Password must have at least 1 number.'
+		})
+	}
+
+	const user = new User({ username, password })
+	const newUser = await user.save()
+
+	const profile = new Profile({ userId: newUser._id, username: newUser.username,  image: '', library: [], lists: [] })
+	const newProfile = await profile.save()
+
+	return res.send({ user: newUser, profile: newProfile })
+})
+
+app.post("/api/login", async (req, res) => {
+	const { username, password } = req.body
+	const user = await User.findOne({ username }).lean()
+
+	if (!user || user.password !== password) {
+		return res.send({
+			formError: 'Combination username/password incorrect'
+		})
+	}
+
+	req.session = { ...req.session, username }
+
+	const { password: pw, ...userWithoutPassword } = user
+
+	res.send({ user: userWithoutPassword })
+})
+
+app.get("/api/profile", async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+
+	const user = await User.findOne({ username }).lean()
+	const profile = await Profile.findOne({ userId: user._id }).populate('library')
+	res.send(profile)
+})
+
+app.get("/api/dashboard", async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+
+	const user = await User.findOne({ username }).lean()
+	const profile = await Profile.findOne({ userId: user._id }).populate([
+		'library',
+		{
+			path: 'lists',
+			populate: {
+				path: 'games',
+				model: 'Game'
+			}
+		},
+		'followers',
+		'following'
+	])
+
+	res.send(profile)
+})
+
+app.get("/api/secure", async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send("You are not logged in")
+	}
+
+	return res.send(`${username} is logged in.`)
+})
 
 
-app.put('/users/:id', async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.params.id, {
-    name: req.body.name,
-    passWord: req.body.passWord
-  }, { new: true });
-  res.send(user);
-});
-
-app.delete('/users/:id', async (req, res) => {
-  const user = await User.findByIdAndRemove(req.params.id);
-  res.send(user);
-});
-
-
-///////////////////////////////Profile Related
-app.get('/api/profiles/:id', async function(req, res) {
-  // Lógica para obter um profile específico da base de dados pelo ID
-  let collection = await db.collection(profilesDB);
-    let query = {_id: new ObjectId(req.params.id)};
-    let result = await collection.findOne(query);
-    console.log('Get /api/profile/:id');
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-});
-
-app.get('/api/profiles', async function(req, res) {
-// Lógica para obter todos os users da base de dados
-let collection = await db.collection(profilesDB);
-  let result = await collection.find({})
-    .limit(50)
-    .toArray();
-  console.log('Get /api/profiles');
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-app.get('/api/profile/:user', async function(req, res) {
-  // Lógica para obter um profile específico da base de dados pelo ID de user
-  let collection = await db.collection(profilesDB);
-    let query = {user: new ObjectId(req.params.id)};
-    let result = await collection.findOne(query);
-    console.log('Get /api/profile/:user');
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-});
-
-app.post('/profiles', async (req, res) => {
-  const profile = new Profile({
-    user: req.body.user,
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    gameLists: req.body.gameLists
-  });
-  await profile.save();
-  res.send(profile);
-});
-
-app.put('/profiles/:id', async (req, res) => {
-  const profile = await Profile.findByIdAndUpdate(req.params.id, {
-    user: req.body.user,
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    gameLists: req.body.gameLists
-  }, { new: true });
-  res.send(profile);
-});
-
-app.delete('/profiles/:id', async (req, res) => {
-  const profile = await Profile.findByIdAndRemove(req.params.id);
-  res.send(profile);
-});
-
-///////////////////////////////Game Related
-app.get('/api/games/:id', async function(req, res) {
-  // Lógica para obter um game específico da base de dados pelo ID
-  let collection = await db.collection(gamesDB);
-  let query = {_id: new ObjectId(req.params.id)};
-  let result = collection.findOne(query);
-  if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-});
-
-app.get('/api/games', async function(req, res) {
-// Lógica para obter todos os games da base de dados
-let collection = await db.collection(gamesDB);
-  let result = await collection.find({})
-    .limit(50)  
-    .toArray();
-  console.log('Get /api/games');
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-app.post('/games', async (req, res) => {
-  const game = new Game({
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    gameLists: req.body.gameLists
-  });
-  await game.save();
-  res.send(game);
-});
-
-app.put('/games/:id', async (req, res) => {
-  const game = await Game.findByIdAndUpdate(req.params.id, {
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    gameLists: req.body.gameLists
-  }, { new: true });
-  res.send(game);
-});
-
-///////////////////////////////GameList Related
-app.get('/api/gamelists/:id', async function(req, res) {
-  // Lógica para obter um gamelist específico da base de dados pelo ID
-  let collection = await db.collection(gameListsDB);
-  let query = {_id: new ObjectId(req.params.id)};
-  let result = collection.findOne(query);
-  console.log('Get /api/gamelists/:id');
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-app.get('/api/gamelists', async function(req, res) {
-  // Lógica para obter todos os gamelists da base de dados
-  let collection = await db.collection(gameListsDB);
-  let result = await collection.find({})
-    .limit(50)
-    .toArray();
-  console.log('Get /api/gamelists');
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-app.post('/gamelists', async (req, res) => {
-  const gameList = new GameList({
-    name: req.body.name,
-    description: req.body.description,
-    games: req.body.games
-  });
-  await gameList.save();
-  res.send(gameList);
-});
-
-app.put('/gamelists/:id', async (req, res) => {
-  const gameList = await GameList.findByIdAndUpdate(req.params.id, {
-    name: req.body.name,
-    description: req.body.description,
-    games: req.body.games
-  }, { new: true });
-  res.send(gameList);
-});
-
-app.delete('/gamelists/:id', async (req, res) => {
-  const gameList = await GameList.findByIdAndRemove(req.params.id);
-  res.send(gameList);
-});
-
-// Iniciar o servidor
-app.listen(port, function () {
-  console.log(`Servidor rodando na porta ${port}.`);
-});
