@@ -259,7 +259,7 @@ app.get('/api/search', async (req, res) => {
       games,
       gameLists
     };
-
+    console.log(searchResults);
     res.json(searchResults);
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while searching for results.' });
