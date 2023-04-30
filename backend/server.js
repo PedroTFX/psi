@@ -1,10 +1,10 @@
 /**
  * @file server.js
  * @description Server file for the backend.
- * 
+ *
   * This file is responsible for the backend of the application.
   * It contains the routes and the database connection.
-  * 
+  *
  */
 const express = require('express')
 const mongoose = require('mongoose')
@@ -19,8 +19,8 @@ const port = 3000
 
 var cors = require('cors')
 app.use(cors({
-	credentials: true,
-	origin: 'http://localhost:4200'
+	//credentials: true,
+	//origin: 'http://localhost:4200'
 }))
 
 // Coloca JSON no req.body
