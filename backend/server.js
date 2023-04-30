@@ -33,7 +33,7 @@ app.use(cookieSession({
 	maxAge: 30 * 24 * 60 * 60 * 1000 // 1 month
 }))
 const connectDatabase = async () => {
-	await mongoose.connect('mongodb+srv://admin:admin@app.yi0znic.mongodb.net/test')
+	await mongoose.connect('mongodb://psi005:psi005@localhost:27017/psi005?retryWrites=true&authSource=psi005')
 
 	app.listen(port, () => {
 		console.log(`Example app listening on port ${port}..`)
