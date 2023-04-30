@@ -15,7 +15,7 @@ const { GameList } = require('./models/GameListModel')
 const { Image } = require('./models/ImageModel')
 var cookieSession = require('cookie-session')
 const app = express()
-const port = 3000
+const port = 3055
 
 var cors = require('cors')
 app.use(cors())
