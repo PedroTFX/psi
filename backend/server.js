@@ -18,10 +18,14 @@ const app = express()
 const port = 3000
 
 var cors = require('cors')
+app.use(cors())
+
+
+/* var cors = require('cors')
 app.use(cors({
 	//credentials: true,
 	//origin: 'http://localhost:4200'
-}))
+})) */
 
 // Coloca JSON no req.body
 app.use(express.json())
