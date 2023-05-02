@@ -40,7 +40,7 @@ const connectDatabase = async () => {
 	await mongoose.connect('mongodb://psi005:psi005@localhost:27017/psi005?retryWrites=true&authSource=psi005')
 
 	app.listen(port, () => {
-		console.log(`Example app listening on port ${port}..`)
+		console.log(`App listening on port ${port}..`)
 	})
 }
 connectDatabase()
