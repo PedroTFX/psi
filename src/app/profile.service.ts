@@ -19,6 +19,6 @@ export class ProfileService {
 	constructor(private http: HttpClient) { }
 
 	get(): Observable<Profile & { error?: string }> {
-		return this.http.get<Profile & { error?: string }>('http://localhost:3000/api/profile', this.httpOptions)
+		return this.http.get<Profile & { error?: string }>('http://localhost:3055/api/profile', this.httpOptions)
 	}
 }
