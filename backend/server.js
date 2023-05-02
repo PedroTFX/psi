@@ -28,8 +28,11 @@ app.use(cookieSession({
 }))
 
 // Connect to DB
+const productionDB = true
+const prodDBConnectionString = 'mongodb://psi005:psi005@appserver.alunos.di.fc.ul.pt:27017/psi005?retryWrites=true&authSource=psi005'
+const devDBConnectionString = 'mongodb://127.0.0.1:27017/ex04'
 const connectDatabase = async () => {
-	await mongoose.connect('mongodb://psi005:psi005@localhost:27017/psi005?retryWrites=true&authSource=psi005')
+	await mongoose.connect(productionDB ? prodDBConnectionString : devDBConnectionString)
 
 	app.listen(port, () => {
 		console.log(`App listening on port ${port}..`)
