@@ -2,7 +2,7 @@
 	"name": "projeto-psi",
 	"version": "0.0.0",
 	"scripts": {
-		"ng": "ng",
+		"serve": "lite-server -c bs-config.json --baseDir=\"dist/projeto-psi/\"",
 		"start": "ng serve --port 3005 --host 0.0.0.0 --disable-host-check",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
