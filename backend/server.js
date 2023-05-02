@@ -12,30 +12,22 @@ const { User } = require('./models/UserModel')
 const { Profile } = require('./models/ProfileModel')
 const { Game } = require('./models/GameModel')
 const { GameList } = require('./models/GameListModel')
-const { Image } = require('./models/ImageModel')
 var cookieSession = require('cookie-session')
+const cors = require('cors')
+
 const app = express()
 const port = 3055
 
-var cors = require('cors')
-app.use(cors())
-
-
-/* var cors = require('cors')
-app.use(cors({
-	//credentials: true,
-	//origin: 'http://localhost:4200'
-})) */
-
-// Coloca JSON no req.body
-app.use(express.json())
+// Middleware
+app.use(cors({ credentials: true, origin: true })) // Allow all CORS requests
+app.use(express.json()) // Coloca JSON no req.body
 app.use(cookieSession({
 	name: 'session',
 	keys: ['password'],
-/* 	sameSite: 'none',
-	secure: true, */
 	maxAge: 30 * 24 * 60 * 60 * 1000 // 1 month
 }))
+
+// Connect to DB
 const connectDatabase = async () => {
 	await mongoose.connect('mongodb://psi005:psi005@localhost:27017/psi005?retryWrites=true&authSource=psi005')
 
@@ -179,7 +171,7 @@ app.post('/api/create-account', async (req, res) => {
 	const user = new User({ username, password })
 	const newUser = await user.save()
 
-	const profile = new Profile({ userId: newUser._id, username: newUser.username,  image: '', library: [], lists: [] })
+	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [] })
 	const newProfile = await profile.save()
 
 	return res.send({ user: newUser, profile: newProfile })
@@ -246,27 +238,27 @@ app.get("/api/secure", async (req, res) => {
 })
 
 app.get('/api/search', async (req, res) => {
-  const searchQuery = req.query.q;
-  console.log(searchQuery);
-  if(searchQuery.length == 0 || searchQuery == undefined) {
-    console.log('empty search query');
-    res.send([]);
-    return;
-  }
-  try {
-    const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
-    const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
-    const gameLists = await GameList.find({ name: { $regex: searchQuery, $options: 'i' } }).populate('games');
+	const searchQuery = req.query.q;
+	console.log(searchQuery);
+	if (searchQuery.length == 0 || searchQuery == undefined) {
+		console.log('empty search query');
+		res.send([]);
+		return;
+	}
+	try {
+		const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
+		const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
+		const gameLists = await GameList.find({ name: { $regex: searchQuery, $options: 'i' } }).populate('games');
 
-    const searchResults = {
-      profiles,
-      games,
-      gameLists
-    };
-    res.json(searchResults);
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while searching for results.' });
-  }
+		const searchResults = {
+			profiles,
+			games,
+			gameLists
+		};
+		res.json(searchResults);
+	} catch (error) {
+		res.status(500).json({ message: 'An error occurred while searching for results.' });
+	}
 });
 
 
