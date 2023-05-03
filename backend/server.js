@@ -6,6 +6,7 @@
   * It contains the routes and the database connection.
   *
  */
+
 const express = require('express')
 const mongoose = require('mongoose')
 const { User } = require('./models/UserModel')
@@ -14,6 +15,7 @@ const { Game } = require('./models/GameModel')
 const { GameList } = require('./models/GameListModel')
 var cookieSession = require('cookie-session')
 const cors = require('cors')
+const { init } = require('./db/init')
 
 const app = express()
 const port = 3055
@@ -40,75 +42,7 @@ const connectDatabase = async () => {
 }
 connectDatabase()
 
-app.get('/api/init', async (req, res) => {
-	// Delete DB
-	await User.deleteMany();
-	await Profile.deleteMany();
-	await Game.deleteMany();
-	await GameList.deleteMany();
-
-	// Seed DB
-	const newUsers = await User.insertMany([
-		{ username: 'Lucas', password: "Lucas1234" },
-		{ username: 'Diogo', password: "Diogo4321" }
-	], { lean: true })
-
-	const newGames = await Game.insertMany([
-		{ name: "League of Legends" },
-		{ name: "CS:GO" },
-		{ name: "CS 1.6" },
-		{ name: "Super Tux" },
-	], { lean: true })
-
-	const lucasLists = await GameList.insertMany([
-		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
-		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
-	])
-	const diogoLists = await GameList.insertMany([
-		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
-		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
-	])
-
-	// Create profiles
-	const lucasProfile = new Profile({
-		userId: newUsers[0]._id,
-		username: newUsers[0].username,
-		image: '',
-		library: [newGames[0]._id, newGames[1]._id],
-		lists: [lucasLists[0]._id, lucasLists[1]._id],
-		followers: [],
-		following: []
-	})
-	const createdLucasProfile = await lucasProfile.save()
-	const diogoProfile = new Profile({
-		userId: newUsers[1]._id,
-		username: newUsers[1].username,
-		image: '',
-		library: [newGames[2]._id, newGames[3]._id],
-		lists: [diogoLists[0]._id, diogoLists[1]._id],
-		followers: [],
-		following: []
-	})
-	const createdDiogoProfile = await diogoProfile.save()
-
-	// Add Diogo as Lucas's follower
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		followers: [createdDiogoProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		following: [createdLucasProfile._id]
-	})
-
-	// Add Lucas as Diogo's follower
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		followers: [createdLucasProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		following: [createdDiogoProfile._id]
-	})
-
-	res.send("Database seeded");
-});
+app.get('/api/init', init);
 
 app.get('/api', async (req, res) => {
 	res.send('Hello World!')
