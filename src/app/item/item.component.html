@@ -1,0 +1,15 @@
+<div class="prose">
+	<div *ngIf="item == null && error == ''">Loading...</div>
+	<ng-container *ngIf="error != ''; then hasError; else hasItem"></ng-container>
+</div>
+
+<ng-template #hasError>
+	<p>There was an error getting this item!</p>
+</ng-template>
+
+<ng-template #hasItem>
+	<h3>{{item?.name}} <span class="rounded-lg p-2 text-xs bg-slate-400">{{item?.type}}</span></h3>
+	<div *ngIf="item?.image1" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image1 + '\')'}" alt="Photo" class="rounded-lg w-96 h-96 bg-cover"></div>
+	<div *ngIf="item?.image2" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image2 + '\')'}" alt="Photo" class="rounded-lg w-96 h-96 bg-cover"></div>
+	<div *ngIf="item?.image3" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image3 + '\')'}" alt="Photo" class="rounded-lg w-96 h-96 bg-cover"></div>
+</ng-template>

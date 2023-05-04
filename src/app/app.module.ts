@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
-import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ItemComponent } from './item/item.component';
 
 @NgModule({
 	declarations: [
@@ -23,8 +23,9 @@ import { ProfileComponent } from './profile/profile.component';
 		LoginComponent,
   				DashboardComponent,
 		ItemSearchComponent,
-  		ItemDetailComponent,
-  		ProfileComponent
+  		ItemComponent,
+  		ProfileComponent,
+    ItemComponent
 	],
 	imports: [
 		BrowserModule,

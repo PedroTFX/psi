@@ -1,5 +1,17 @@
 <header class="flex justify-between gap-4">
 	<a [routerLink]="'/item-search'" class="mr-auto p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Steam dos Pobres</a>
+	<ng-container *ngIf="loggedIn; then isLoggedIn; else isNotLoggedIn"></ng-container>
+</header>
+
+<ng-template #isNotLoggedIn>
 	<a [routerLink]="'/login'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Login</a>
 	<a [routerLink]="'/create-account'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Create account</a>
-</header>
+</ng-template>
+
+<ng-template #isLoggedIn>
+	<a [routerLink]="'/dashboard'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Dashboard</a>
+	<a [routerLink]="'/profile'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Profile</a>
+	<a [routerLink]="'/item-search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Search</a>
+	<a [routerLink]="'/user-search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">User Search</a>
+	<span class="text-white p-4 bg-sky-200 hover:bg-sky-900 hover:text-white" (click)="logout()">Logout</span>
+</ng-template>

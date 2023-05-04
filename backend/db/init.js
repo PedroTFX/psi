@@ -1,11 +1,17 @@
 const fs = require('fs').promises
+const { User } = require('../models/User')
+const { Profile } = require('../models/Profile')
+const { Item } = require('../models/Item')
+const { ItemList } = require('../models/ItemList')
+const { Review } = require('../models/Review')
+const { ReviewComment } = require('../models/ReviewComment')
 
-export const init = async (req, res) => {
+const init = async (req, res) => {
 	// Delete DB
 	await User.deleteMany();
 	await Profile.deleteMany();
-	await Game.deleteMany();
-	await GameList.deleteMany();
+	await Item.deleteMany();
+	await ItemList.deleteMany();
 
 	// Seed DB
 	const newUsers = await User.insertMany([
@@ -17,13 +23,13 @@ export const init = async (req, res) => {
 		{ username: 'Miguel', password: "Passw0rd" }
 	], { lean: true })
 
-	const newReviewComments = await ReviewComments.insertMany([
+	const newReviewComments = await ReviewComment.insertMany([
 		{ userId: newUsers[0]._id, comment: 'Concordo!' },
 		{ userId: newUsers[1]._id, comment: 'Estás lá!' },
 		{ userId: newUsers[2]._id, comment: 'Não concordo!' },
 	])
 
-	const newReviews = await Review.insertMane([
+	const newReviews = await Review.insertMany([
 		{ userId: newUsers[0]._id, score: 5, comment: 'Alto jogo!', comments: [newReviewComments[0]._id] },
 		{ userId: newUsers[1]._id, score: 4, comment: 'Alto jogo man!', comments: [newReviewComments[0]._id] },
 		{ userId: newUsers[2]._id, score: 3, comment: 'Mais ou menos...', comments: [newReviewComments[0]._id] },
@@ -34,7 +40,7 @@ export const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'League of Legends',
-			image1: await fs.readFile('/items/lol.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./db/items/lol.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -47,7 +53,7 @@ export const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'CS:GO',
-			image1: await fs.readFile('/items/cs_go.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./db/items/cs_go.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -60,7 +66,7 @@ export const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'CS 1.6',
-			image1: await fs.readFile('/items/cs_1.6.jpg', { encoding: 'base64' }),
+			image1: await fs.readFile('./db/items/cs_1.6.jpg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -73,7 +79,7 @@ export const init = async (req, res) => {
 		{
 			type: 'SUBSCRIPTION',
 			name: 'World of Warcraft',
-			image1: await fs.readFile('/items/wow.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./db/items/wow.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -86,7 +92,7 @@ export const init = async (req, res) => {
 		{
 			type: 'DLC',
 			name: 'World of Warcraft: The Warlords of Draenor',
-			image1: await fs.readFile('/items/wow_twd.jpg', { encoding: 'base64' }),
+			image1: await fs.readFile('./db/items/wow_twd.jpg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -99,60 +105,46 @@ export const init = async (req, res) => {
 	], { lean: true })
 
 	const newItemLists = await ItemList.insertMany([
-		{ userId: newUsers[0]._id, name: 'Jogos Completos', items: [newItems[0]._id]},
-		{ userId: newUsers[1]._id, name: 'Jogos RPG', items: [newItems[1]._id, newItems[2]._id]},
-		{ userId: newUsers[2]._id, name: 'MMORPG', items: [newItems[3]._id]},
-		{ userId: newUsers[3]._id, name: '', items: []},
+		{ name: 'Jogos Completos', items: [newItems[0]._id] },
+		{ name: 'Jogos RPG', items: [newItems[1]._id, newItems[2]._id] },
+		{ name: 'MMORPG', items: [newItems[3]._id] },
 	])
-
-	/**
-	 *	Criei o modelo de dados (quase) completo e uma função que popula a base de dados com (quase) tudo o que precisamos.
-	 Só não criei o Gift (para presentiar outro utilizador com um item (jogo, DLC, subscrição)) e o Purchase (para o processo de compra).
-
-	 Agora que isto está feito, torna-se mais fácil criar os endpoints na API e as views no Angular.
-	 *
-	 */
 
 	// Create profiles
-	const newProfiles = await Propfile.insertMany([
+	const newProfiles = await Profile.insertMany([
 		{
-			userId: newUsers[0]._id,
+			userId: newUsers[0]._id, // Lucas
 			username: newUsers[0].username,
-			image: await fs.readFile('/db/users/user1.jpeg', { encoding: 'base64' }), ,
-			library: [newItems[0]._id, newItems[1]._id],
-			lists: [lucasLists[0]._id, lucasLists[1]._id],
+			image: await fs.readFile('./db/users/user1.jpeg', { encoding: 'base64' }),
+			library: [newItems[0]._id, newItems[1]._id], // LOL e CS:GO
+			lists: [newItemLists[0]._id],
 			followers: [],
-			following: []
+			following: [],
+			wishlist: [newItems[2]._id]
+		},
+		{
+			userId: newUsers[1]._id, // Diogo
+			username: newUsers[1].username,
+			image: await fs.readFile('./db/users/user2.jpeg', { encoding: 'base64' }),
+			library: [newItems[2]._id, newItems[3]._id], // CS 1.6 e WOW
+			lists: [newItemLists[1]._id, newItemLists[2]._id],
+			followers: [],
+			following: [],
+			wishlist: []
 		}
 	])
-	const lucasProfile = new Profile()
-	const createdLucasProfile = await lucasProfile.save()
-	const diogoProfile = new Profile({
-		userId: newUsers[1]._id,
-		username: newUsers[1].username,
-		image: '',
-		library: [newGames[2]._id, newGames[3]._id],
-		lists: [diogoLists[0]._id, diogoLists[1]._id],
-		followers: [],
-		following: []
-	})
-	const createdDiogoProfile = await diogoProfile.save()
 
-	// Add Diogo as Lucas's follower
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		followers: [createdDiogoProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		following: [createdLucasProfile._id]
-	})
+	const lucasId = newProfiles[0]._id
+	const diogoId = newProfiles[1]._id
 
-	// Add Lucas as Diogo's follower
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		followers: [createdLucasProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		following: [createdDiogoProfile._id]
-	})
+	await Profile.findByIdAndUpdate(lucasId, { following: [diogoId] }) // Lucas follows Diogo
+	await Profile.findByIdAndUpdate(diogoId, { followers: [lucasId] }) // Diogo has Lucas as its follower
+
+	await Profile.findByIdAndUpdate(diogoId, { following: [lucasId] }) // Diogo follows Lucas
+	await Profile.findByIdAndUpdate(lucasId, { followers: [diogoId] }) // Lucas has Diogo as its follower
 
 	res.send("Database seeded");
 }
+
+
+module.exports = init

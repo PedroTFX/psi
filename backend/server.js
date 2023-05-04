@@ -9,13 +9,13 @@
 
 const express = require('express')
 const mongoose = require('mongoose')
-const { User } = require('./models/UserModel')
-const { Profile } = require('./models/ProfileModel')
-const { Game } = require('./models/GameModel')
-const { GameList } = require('./models/GameListModel')
+const { User } = require('./models/User')
+const { Profile } = require('./models/Profile')
+const { Item } = require('./models/Item')
+const { ItemList } = require('./models/ItemList')
 var cookieSession = require('cookie-session')
 const cors = require('cors')
-const { init } = require('./db/init')
+const init = require('./db/init')
 
 const app = express()
 const port = 3055
@@ -44,9 +44,7 @@ connectDatabase()
 
 app.get('/api/init', init);
 
-app.get('/api', async (req, res) => {
-	res.send('Hello World!')
-})
+app.get('/api', async (req, res) => res.send('Hello World!'))
 
 app.post('/api/create-account', async (req, res) => {
 	const { username, password } = req.body
@@ -108,7 +106,7 @@ app.post('/api/create-account', async (req, res) => {
 	const user = new User({ username, password })
 	const newUser = await user.save()
 
-	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [] })
+	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [], wishlist: [] })
 	const newProfile = await profile.save()
 
 	return res.send({ user: newUser, profile: newProfile })
@@ -138,7 +136,7 @@ app.get("/api/profile", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate('library')
+	const profile = await Profile.findOne({ userId: user._id }).populate(['library', 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
@@ -149,29 +147,18 @@ app.get("/api/dashboard", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate([
-		'library',
-		{
-			path: 'lists',
-			populate: {
-				path: 'games',
-				model: 'Game'
-			}
-		},
-		'followers',
-		'following'
-	])
-
+	const profile = await Profile.findOne({ userId: user._id }).populate(['library', 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
-app.get("/api/secure", async (req, res) => {
+app.get("/api/item/:id", async (req, res) => {
 	const { username } = req.session
 	if (!username) {
-		return res.send("You are not logged in")
+		return res.send({ error: "You are not logged in" })
 	}
 
-	return res.send(`${username} is logged in.`)
+	const item = await Item.findById(req.params.id).lean()
+	res.send(item)
 })
 
 app.get('/api/search', async (req, res) => {

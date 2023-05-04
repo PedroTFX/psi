@@ -1,13 +1,12 @@
-import { Game } from "./Game"
+import { Item } from "./Item"
 import { List } from "./List"
-import { Image } from './Image';
 
 
 export type Profile = {
 	_id?: string;
 	username: string;
-	image?: Image;
-	library: Game[];
+	image?: string;
+	library: Item[];
 	lists: List[];
 	following: Profile[];
 	followers: Profile[];

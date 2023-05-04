@@ -5,6 +5,7 @@ const Profile = mongoose.model('Profile', new mongoose.Schema({
 	username: { type: String, required: true, unique: true},
 	image: String,
 	library: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
+	//library: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purchase' }],
 	lists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ItemList' }],
 	following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],
 	followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Profile' }],

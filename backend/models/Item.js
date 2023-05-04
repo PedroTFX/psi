@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const Item = mongoose.model('Item', new mongoose.Schema({
-	type: { type: String, enum: ['GAME', 'DLC', 'SUBSCRIPTION'], default: 'GAME'},
+	type: { type: String, required: true, enum: ['GAME', 'DLC', 'SUBSCRIPTION'], default: 'GAME'},
 	name: { type: String, required: true },
 	image1: { type: String, required: true },
 	image2: String,

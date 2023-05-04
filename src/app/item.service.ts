@@ -1,14 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Profile } from './types/Profile';
 import { api } from './constants';
+import { Item } from './types/Item';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class ProfileService {
-
+export class ItemService {
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 		withCredentials: true
@@ -16,11 +15,7 @@ export class ProfileService {
 
 	constructor(private http: HttpClient) { }
 
-	getProfile() {
-		throw new Error('Method not implemented.');
-	}
-
-	get(): Observable<Profile & { error?: string }> {
-		return this.http.get<Profile & { error?: string }>(`${api}/profile`, this.httpOptions)
+	get(id: string): Observable<Item & { error?: string }> {
+		return this.http.get<Item & { error?: string }>(`${api}/item/${id}`, this.httpOptions)
 	}
 }

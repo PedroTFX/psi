@@ -21,7 +21,6 @@ export class DashboardComponent {
 			}
 			this.dashboard = dashboard
 			console.log(dashboard)
-
 		})
 	}
 }
