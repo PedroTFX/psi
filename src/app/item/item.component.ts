@@ -23,6 +23,8 @@ export class ItemComponent {
 				return
 			}
 			this.item = item
+			console.log(item)
+
 		})
 	}
 }

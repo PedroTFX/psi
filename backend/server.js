@@ -129,6 +129,12 @@ app.post("/api/login", async (req, res) => {
 	res.send({ user: userWithoutPassword })
 })
 
+app.get("/api/logout", async (req, res) => {
+	res.clearCookie('session')
+	res.clearCookie('session.sig')
+	res.send({ ok: 'You have been logged out' })
+})
+
 app.get("/api/profile", async (req, res) => {
 	const { username } = req.session
 	if (!username) {
@@ -158,7 +164,19 @@ app.get("/api/item/:id", async (req, res) => {
 	}
 
 	const item = await Item.findById(req.params.id).lean()
-	res.send(item)
+	const itemWithReviews = await Item.findById(req.params.id).populate('reviews').lean()
+	const itemWithReviewsAndReviewComments = await Item.findById(req.params.id).populate({
+		path: 'reviews',
+		populate: [
+			{ path: 'userId', model: 'User' },
+			{
+				path: 'comments',
+				model: 'ReviewComment',
+				populate: { path: 'userId', model: 'User' }
+			},
+		]
+	}).lean()
+	res.send(itemWithReviewsAndReviewComments)
 })
 
 app.get('/api/search', async (req, res) => {

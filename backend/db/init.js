@@ -30,7 +30,7 @@ const init = async (req, res) => {
 	])
 
 	const newReviews = await Review.insertMany([
-		{ userId: newUsers[0]._id, score: 5, comment: 'Alto jogo!', comments: [newReviewComments[0]._id] },
+		{ userId: newUsers[0]._id, score: 5, comment: 'Alto jogo!', comments: [newReviewComments[1]._id] },
 		{ userId: newUsers[1]._id, score: 4, comment: 'Alto jogo man!', comments: [newReviewComments[0]._id] },
 		{ userId: newUsers[2]._id, score: 3, comment: 'Mais ou menos...', comments: [newReviewComments[0]._id] },
 		{ userId: newUsers[3]._id, score: 5, comment: 'Muito bom!', comments: [] }
@@ -40,7 +40,7 @@ const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'League of Legends',
-			image1: await fs.readFile('./db/items/lol.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./backend/db/items/lol.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -53,7 +53,7 @@ const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'CS:GO',
-			image1: await fs.readFile('./db/items/cs_go.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./backend/db/items/cs_go.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -66,7 +66,7 @@ const init = async (req, res) => {
 		{
 			type: 'GAME',
 			name: 'CS 1.6',
-			image1: await fs.readFile('./db/items/cs_1.6.jpg', { encoding: 'base64' }),
+			image1: await fs.readFile('./backend/db/items/cs_1.6.jpg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -79,7 +79,7 @@ const init = async (req, res) => {
 		{
 			type: 'SUBSCRIPTION',
 			name: 'World of Warcraft',
-			image1: await fs.readFile('./db/items/wow.jpeg', { encoding: 'base64' }),
+			image1: await fs.readFile('./backend/db/items/wow.jpeg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -92,7 +92,7 @@ const init = async (req, res) => {
 		{
 			type: 'DLC',
 			name: 'World of Warcraft: The Warlords of Draenor',
-			image1: await fs.readFile('./db/items/wow_twd.jpg', { encoding: 'base64' }),
+			image1: await fs.readFile('./backend/db/items/wow_twd.jpg', { encoding: 'base64' }),
 			image2: '',
 			image3: '',
 			videoURL: 'https://youtu.be/dQw4w9WgXcQ',
@@ -115,7 +115,7 @@ const init = async (req, res) => {
 		{
 			userId: newUsers[0]._id, // Lucas
 			username: newUsers[0].username,
-			image: await fs.readFile('./db/users/user1.jpeg', { encoding: 'base64' }),
+			image: await fs.readFile('./backend/db/users/user1.jpeg', { encoding: 'base64' }),
 			library: [newItems[0]._id, newItems[1]._id], // LOL e CS:GO
 			lists: [newItemLists[0]._id],
 			followers: [],
@@ -125,7 +125,7 @@ const init = async (req, res) => {
 		{
 			userId: newUsers[1]._id, // Diogo
 			username: newUsers[1].username,
-			image: await fs.readFile('./db/users/user2.jpeg', { encoding: 'base64' }),
+			image: await fs.readFile('./backend/db/users/user2.jpeg', { encoding: 'base64' }),
 			library: [newItems[2]._id, newItems[3]._id], // CS 1.6 e WOW
 			lists: [newItemLists[1]._id, newItemLists[2]._id],
 			followers: [],
