@@ -12,7 +12,7 @@ US02 - alta		✅ Login
 US03 - alta		✅ Dashboard - listas de jogos, biblioteca (items comprados), seguidores e pessoas que me seguem
 US04 - alta		✅ Perfil - username, profile photo, biblioteca (items comprados), wishlist, listas de jogos, seguidores e pessoas que me seguem
 US05 - média	- Editar perfil - username deve ter mais de 2 chars alfanuméricos e deve ser único
-US06 - alta		⚠️ Pesquisa - titulo do item (podemos também pesquisar descrição se não houverem resultados)
+US06 - alta		✅ Pesquisa - titulo do item (podemos também pesquisar descrição se não houverem resultados)
 US07 - baixa	- Pesquisar users
 US08 - baixa	- Ver perfil de outros users (a partir da pesquisa)
 US09 - baixa	- Seguir utilizador
@@ -21,6 +21,7 @@ US11 - média	- Adicionar item ao carrinho de compras
 US12 - média	- Visualizar e gerir items no carrinho de compras (ver nome, tipo, preço e quantidade, valor total, alterar quantidade e eliminar items)
 US13 - média	- Fazer checkout (pedir NIF, morada opcional, duas opções de métodos de pagamento, 50% de probabilidade do pagamento ter sucesso, sucesso ? adicionar item à biblioteca e remover da wishlist)
 US14 - alta		⚠️ Ver bilbioteca (data de aquisição, preço, ordenar por data de aquisição)
+	adicionar masi pusrchaes e verificar se ordenacao funciona
 US15 - média	- Avaliar item adquirido (classificação 1-5 estrelas, comentário opcional com limite de 5000 chars)
 US16 - baixa	- Interagir com avaliações de outros (gosto/like e opcionalmente uma resposta com limite de 5000 chars)
 US17 - média	- Ver wishlist

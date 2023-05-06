@@ -1,37 +1,14 @@
 <div class="py-4">
-	<input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" class="border">
+	<input type="text" [(ngModel)]="query" class="border">
 	<button type="button" (click)="onSearch()">Search</button>
 </div>
 
-<div *ngIf="searchResults" class="prose">
+<div class="prose">
 	<h2>Search Results</h2>
-	<h3>Games:</h3>
-	<ul *ngIf="searchResults.games?.length">
-		<li *ngFor="let game of searchResults.games">
-			<a [routerLink]="['/', 'games', game._id]">{{ game.name }}</a>
+	<ul *ngIf="items.length > 0">
+		<li *ngFor="let item of items">
+			<a [routerLink]="['/', 'item', item._id]">{{ item.name }}</a>
 		</li>
 	</ul>
-	<p *ngIf="!searchResults.games || searchResults.games.length === 0">No games found</p>
-
-	<h3>Profiles:</h3>
-	<ul *ngIf="searchResults.profiles?.length">
-		<li *ngFor="let profile of searchResults.profiles">
-			<a [routerLink]="['/', 'users', profile.userId]">{{ profile.username }}</a>
-			<p>{{ profile.username }}</p>
-		</li>
-	</ul>
-	<p *ngIf="!searchResults.profiles || searchResults.profiles.length === 0">No profiles found</p>
-
-	<h3>Game lists:</h3>
-	<ul *ngIf="searchResults.gameLists?.length">
-		<li *ngFor="let gameList of searchResults.gameLists">
-			<a [routerLink]="['/', 'game-lists', gameList._id]">{{ gameList.name }}</a>
-			<ul>
-				<li *ngFor="let game of gameList.games">
-					{{ game.name }}
-				</li>
-			</ul>
-		</li>
-	</ul>
-	<p *ngIf="!searchResults.gameLists || searchResults.gameLists.length === 0">No game lists found</p>
+	<p *ngIf="items.length == 0">No games found</p>
 </div>

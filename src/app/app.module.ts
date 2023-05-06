@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
-import { ProfileComponent } from './profile/profile.component';
 import { ItemComponent } from './item/item.component';
+import { LibraryComponent } from './library/library.component';
 
 @NgModule({
 	declarations: [
@@ -21,11 +21,11 @@ import { ItemComponent } from './item/item.component';
 		FooterComponent,
 		CreateAccountComponent,
 		LoginComponent,
-  				DashboardComponent,
+		DashboardComponent,
 		ItemSearchComponent,
-  		ItemComponent,
-  		ProfileComponent,
-    ItemComponent
+		ItemComponent,
+		ItemComponent,
+		LibraryComponent
 	],
 	imports: [
 		BrowserModule,

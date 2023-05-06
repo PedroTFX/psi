@@ -142,7 +142,10 @@ app.get("/api/profile", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate(['library', 'lists', 'following', 'followers', 'wishlist'])
+	const profile = await Profile.findOne({ userId: user._id }).populate([{
+		path: 'library',
+		populate: 'item'
+	}, 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
@@ -153,7 +156,10 @@ app.get("/api/dashboard", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate(['library', 'lists', 'following', 'followers', 'wishlist'])
+	const profile = await Profile.findOne({ userId: user._id }).populate([{
+		path: 'library',
+		populate: 'item'
+	}, 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
@@ -180,28 +186,21 @@ app.get("/api/item/:id", async (req, res) => {
 })
 
 app.get('/api/search', async (req, res) => {
-	const searchQuery = req.query.q;
-	console.log(searchQuery);
-	if (searchQuery.length == 0 || searchQuery == undefined) {
-		console.log('empty search query');
-		res.send([]);
-		return;
+	const query = req.query.q
+	console.log(query)
+	if (query == undefined || query.length == 0) return res.status(400)
+	const items = await Item.find({ name: new RegExp(`${query}`, 'i') }).populate('reviews')
+	res.send(items)
+})
+
+app.get('/api/library', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
 	}
-	try {
-		const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
-		const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
-		const gameLists = await GameList.find({ name: { $regex: searchQuery, $options: 'i' } }).populate('games');
-
-		const searchResults = {
-			profiles,
-			games,
-			gameLists
-		};
-		res.json(searchResults);
-	} catch (error) {
-		res.status(500).json({ message: 'An error occurred while searching for results.' });
-	}
-});
-
-
-
+	const { library } = await Profile.findOne({ username }).populate([{
+		path: 'library',
+		populate: 'item'
+	}])
+	res.send(library)
+})

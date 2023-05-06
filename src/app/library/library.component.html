@@ -1,0 +1,15 @@
+<div class="prose">
+	<h3>Library</h3>
+	<div class="flex gap-2 ml-auto items-center">
+		<p class="m-0">Order by:</p>
+		<button class="p-2 rounded-lg bg-slate-300" (click)="orderByPurchaseDate('DESC')">Newest purchased</button>
+		<button class="p-2 rounded-lg bg-slate-300" (click)="orderByPurchaseDate('ASC')">Oldest purchase</button>
+	</div>
+
+	<ul>
+		<li *ngFor="let purchase of library" >
+			<a [routerLink]="['/', 'item', purchase.item._id]" class="text-black">{{ purchase.item.name }} <span>{{purchase.item.price}}€</span> | <span>{{purchase.date}}</span></a>
+		</li>
+	</ul>
+</div>
+

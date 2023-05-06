@@ -4,8 +4,8 @@ import { CreateAccountComponent } from './create-account/create-account.componen
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
-import { ProfileComponent } from './profile/profile.component';
 import { ItemComponent } from './item/item.component';
+import { LibraryComponent } from './library/library.component';
 
 const routes: Routes = [
 	{ path: 'create-account', component: CreateAccountComponent },
@@ -14,6 +14,7 @@ const routes: Routes = [
 	{ path: 'profile', component: DashboardComponent },
 	{ path: 'item/:id', component: ItemComponent},
 	{ path: 'search', component: ItemSearchComponent },
+	{ path: 'library', component: LibraryComponent },
 ];
 
 @NgModule({

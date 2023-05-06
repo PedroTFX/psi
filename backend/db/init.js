@@ -1,5 +1,6 @@
 const fs = require('fs').promises
 const { User } = require('../models/User')
+const { Purchase } = require('../models/Purchase')
 const { Profile } = require('../models/Profile')
 const { Item } = require('../models/Item')
 const { ItemList } = require('../models/ItemList')
@@ -12,6 +13,7 @@ const init = async (req, res) => {
 	await Profile.deleteMany();
 	await Item.deleteMany();
 	await ItemList.deleteMany();
+	await Purchase.deleteMany();
 
 	// Seed DB
 	const newUsers = await User.insertMany([
@@ -110,13 +112,18 @@ const init = async (req, res) => {
 		{ name: 'MMORPG', items: [newItems[3]._id] },
 	])
 
+	const newPurchases = await Purchase.insertMany([
+		{ userId: newUsers[0]._id, item: newItems[0]._id, date: new Date(new Date().setDate(new Date().getDate() - 1)) },
+	])
+
+
 	// Create profiles
 	const newProfiles = await Profile.insertMany([
 		{
 			userId: newUsers[0]._id, // Lucas
 			username: newUsers[0].username,
 			image: await fs.readFile('./backend/db/users/user1.jpeg', { encoding: 'base64' }),
-			library: [newItems[0]._id, newItems[1]._id], // LOL e CS:GO
+			library: [newPurchases[0]._id], // LOL e CS:GO
 			lists: [newItemLists[0]._id],
 			followers: [],
 			following: [],
@@ -126,13 +133,17 @@ const init = async (req, res) => {
 			userId: newUsers[1]._id, // Diogo
 			username: newUsers[1].username,
 			image: await fs.readFile('./backend/db/users/user2.jpeg', { encoding: 'base64' }),
-			library: [newItems[2]._id, newItems[3]._id], // CS 1.6 e WOW
-			lists: [newItemLists[1]._id, newItemLists[2]._id],
+			library: [], // CS 1.6 e WOW
+			lists: [],
 			followers: [],
 			following: [],
 			wishlist: []
 		}
 	])
+
+
+
+
 
 	const lucasId = newProfiles[0]._id
 	const diogoId = newProfiles[1]._id

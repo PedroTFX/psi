@@ -10,8 +10,9 @@
 
 <ng-template #isLoggedIn>
 	<a [routerLink]="'/dashboard'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Dashboard</a>
+	<a [routerLink]="'/library'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Library</a>
 	<a [routerLink]="'/profile'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Profile</a>
-	<a [routerLink]="'/item-search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Search</a>
+	<a [routerLink]="'/search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Search</a>
 	<a [routerLink]="'/user-search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">User Search</a>
 	<span class="text-white p-4 bg-sky-200 hover:bg-sky-900 hover:text-white" (click)="logout()">Logout</span>
 </ng-template>
