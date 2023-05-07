@@ -20,8 +20,7 @@ US10 - alta		✅ Ver items - imagem principal, 2 outras imagens opcionais, link 
 US11 - média	- Adicionar item ao carrinho de compras
 US12 - média	- Visualizar e gerir items no carrinho de compras (ver nome, tipo, preço e quantidade, valor total, alterar quantidade e eliminar items)
 US13 - média	- Fazer checkout (pedir NIF, morada opcional, duas opções de métodos de pagamento, 50% de probabilidade do pagamento ter sucesso, sucesso ? adicionar item à biblioteca e remover da wishlist)
-US14 - alta		⚠️ Ver bilbioteca (data de aquisição, preço, ordenar por data de aquisição)
-	adicionar masi pusrchaes e verificar se ordenacao funciona
+US14 - alta		✅ Ver bilbioteca (data de aquisição, preço, ordenar por data de aquisição
 US15 - média	- Avaliar item adquirido (classificação 1-5 estrelas, comentário opcional com limite de 5000 chars)
 US16 - baixa	- Interagir com avaliações de outros (gosto/like e opcionalmente uma resposta com limite de 5000 chars)
 US17 - média	- Ver wishlist

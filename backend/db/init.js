@@ -14,7 +14,8 @@ const init = async (req, res) => {
 	await Item.deleteMany();
 	await ItemList.deleteMany();
 	await Purchase.deleteMany();
-
+	await ReviewComment.deleteMany();
+	await Review.deleteMany();
 	// Seed DB
 	const newUsers = await User.insertMany([
 		{ username: 'Lucas', password: "Passw0rd" },
@@ -114,6 +115,7 @@ const init = async (req, res) => {
 
 	const newPurchases = await Purchase.insertMany([
 		{ userId: newUsers[0]._id, item: newItems[0]._id, date: new Date(new Date().setDate(new Date().getDate() - 1)) },
+		{ userId: newUsers[0]._id, item: newItems[1]._id, date: new Date(new Date().setDate(new Date().getDate() - 2)) },
 	])
 
 
@@ -123,7 +125,7 @@ const init = async (req, res) => {
 			userId: newUsers[0]._id, // Lucas
 			username: newUsers[0].username,
 			image: await fs.readFile('./backend/db/users/user1.jpeg', { encoding: 'base64' }),
-			library: [newPurchases[0]._id], // LOL e CS:GO
+			library: [newPurchases[0]._id, newPurchases[1]._id], // LOL e CS:GO
 			lists: [newItemLists[0]._id],
 			followers: [],
 			following: [],

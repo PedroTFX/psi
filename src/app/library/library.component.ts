@@ -17,13 +17,21 @@ export class LibraryComponent {
 	}
 
 	orderByPurchaseDate(direction: string) {
+		console.log(direction);
+
 		// Descending purchase date (newest first)
-		if(direction === 'DESC') {
-			this.library.sort((a, b) => a.date.getTime() - b.date.getTime())
+		if(direction === 'ASC') {
+			console.log(this.library[0].date);
+			console.log(this.library[1].date);
+
+
+			const result = this.library.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+			console.log(result);
+
 			return
 		}
 		// Ascending purchase date (oldest first)
-		this.library.sort((a, b) => b.date.getTime() - a.date.getTime())
+		this.library.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 	}
 }
 

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
 	loggedIn: boolean = false
 
-	constructor(private router: Router, private userService: UserService) {}
+	constructor(private router: Router, private userService: UserService) { }
 
 	ngOnInit() {
 		this.loggedIn = localStorage.getItem('currentUser') != null
