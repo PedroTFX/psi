@@ -108,7 +108,7 @@ const init = async (req, res) => {
 	], { lean: true })
 
 	const newItemLists = await ItemList.insertMany([
-		{ name: 'Jogos Completos', items: [newItems[0]._id] },
+		{ name: 'Jogos Completos', items: [newItems[0]._id, newItems[1]._id] },
 		{ name: 'Jogos RPG', items: [newItems[1]._id, newItems[2]._id] },
 		{ name: 'MMORPG', items: [newItems[3]._id] },
 	])
