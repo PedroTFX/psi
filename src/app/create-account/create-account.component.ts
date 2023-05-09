@@ -13,6 +13,7 @@ export class CreateAccountComponent {
 	usernameError: string = ''
 	passwordError: string = ''
 	formError: string = ''
+	success: boolean = false
 
 	constructor(private userService: UserService, private router: Router) { }
 
@@ -24,8 +25,18 @@ export class CreateAccountComponent {
 			this.formError = result.formError || ''
 
 			if (result.user) {
-				this.router.navigate(['/login'])
+				this.success = true
 			}
 		})
+	}
+
+	containsUppercase(str: string) {
+		return /[A-Z]/.test(str)
+	}
+	containsLowercase(str: string) {
+		return /[a-z]/.test(str)
+	}
+	containsNumber(str: string) {
+		return /[0-9]/.test(str)
 	}
 }

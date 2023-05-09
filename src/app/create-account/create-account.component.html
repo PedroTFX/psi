@@ -3,21 +3,24 @@
 	<label for="username">Username</label>
 	<input id="username" type="text" name="username" required minlength="3" [(ngModel)]="username"
 		class="border rounded-full px-2" />
-	<ul>
-		<li class="text-sm">At least 3 characters</li>
-	</ul>
-	<p *ngIf="usernameError">{{usernameError}}</p>
+	<div class="flex justify-end">
+		<p [ngClass]="{'text-green-500': username.length >= 3}" class="rounded-lg text-xs m-0 text-right px-2 py-1">min {{username.length}}/3
+			caracteres</p>
+	</div>
+	<p *ngIf="usernameError" class="p-2 bg-red-50 text-red-500 rounded-lg">{{usernameError}}</p>
 	<label for="password" class="mt-7">Password</label>
 	<input id="password" type="password" name="password" required minlength="8" [(ngModel)]="password"
 		class="border rounded-full px-2" />
-	<p *ngIf="passwordError">{{passwordError}}</p>
-	<ul>
-		<li class="text-sm">At least 8 characters</li>
-		<li class="text-sm">At least 1 uppercase</li>
-		<li class="text-sm">At least 1 lowercase</li>
-		<li class="text-sm">At least 1 number</li>
-	</ul>
-	<p *ngIf="formError">{{formError}}</p>
-	<button type="button" (click)="createAccount()" class="bg-sky-800 rounded-full mt-7 text-white p-2">Create
-		account</button>
+	<div class="flex justify-end">
+		<p [ngClass]="{'text-green-500': password.length >= 8}" class="rounded-lg text-xs m-0 text-right px-2 py-1">min
+			{{password.length}}/8
+			caracteres</p>
+		<p [ngClass]="{'text-green-500': containsUppercase(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">At least 1 uppercase</p>
+		<p [ngClass]="{'text-green-500': containsLowercase(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">At least 1 lowercase</p>
+		<p [ngClass]="{'text-green-500': containsNumber(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">At least 1 number</p>
+	</div>
+	<p *ngIf="passwordError" class="p-2 bg-red-50 text-red-500 rounded-lg">{{passwordError}}</p>
+	<p *ngIf="formError" class="p-2 bg-red-50 text-red-500 rounded-lg">{{formError}}</p>
+	<button type="button" (click)="createAccount()" class="bg-sky-800 rounded-full mt-7 text-white p-2 disabled:bg-slate-400" [disabled]="username.length < 3 || password.length < 8 || !containsUppercase(password) || !containsLowercase(password) || !containsNumber(password)">Create account</button>
+	<p *ngIf="success" class="p-2 bg-green-50 text-green-500 rounded-lg">Conta criada com sucesso! Já pode <a [routerLink]="'/login'">entrar</a>!</p>
 </form>
