@@ -106,8 +106,21 @@ app.post('/api/create-account', async (req, res) => {
 	const user = new User({ username, password })
 	const newUser = await user.save()
 
+	if (!newUser) {
+		return res.send({
+			formError: 'Erro ao criar conta'
+		})
+	}
+
 	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [], wishlist: [] })
+	//const profile = new Profile({ userId: user._id, username: user.username, image: '', library: [], lists: [], wishlist: [] })
 	const newProfile = await profile.save()
+
+	if (!newProfile) {
+		return res.send({
+			formError: 'Erro ao criar conta'
+		})
+	}
 
 	return res.send({ user: newUser, profile: newProfile })
 })
@@ -158,7 +171,14 @@ app.get("/api/dashboard", async (req, res) => {
 	const user = await User.findOne({ username }).lean()
 	const profile = await Profile.findOne({ userId: user._id }).populate([{
 		path: 'library',
-		populate: 'item'
+		populate: {
+			path: 'item',
+			model: 'Item',
+			populate: {
+				path: 'reviews',
+				model: 'Review'
+			},
+		},
 	}, 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
@@ -169,8 +189,6 @@ app.get("/api/item/:id", async (req, res) => {
 		return res.send({ error: "You are not logged in" })
 	}
 
-	const item = await Item.findById(req.params.id).lean()
-	const itemWithReviews = await Item.findById(req.params.id).populate('reviews').lean()
 	const itemWithReviewsAndReviewComments = await Item.findById(req.params.id).populate({
 		path: 'reviews',
 		populate: [
@@ -184,7 +202,6 @@ app.get("/api/item/:id", async (req, res) => {
 	}).lean()
 	res.send(itemWithReviewsAndReviewComments)
 })
-
 app.get('/api/search', async (req, res) => {
 	const query = req.query.q
 	console.log(query)
@@ -192,7 +209,6 @@ app.get('/api/search', async (req, res) => {
 	const items = await Item.find({ name: new RegExp(`${query}`, 'i') }).populate('reviews')
 	res.send(items)
 })
-
 app.get('/api/library', async (req, res) => {
 	const { username } = req.session
 	if (!username) {
@@ -203,4 +219,21 @@ app.get('/api/library', async (req, res) => {
 		populate: 'item'
 	}])
 	res.send(library)
+})
+app.get('/api/list/:id', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+
+		const lists = await ItemList.findOne({ _id: req.params.id }).populate({
+		path: 'items',
+/* 		populate:[
+			{
+				path: 'items',
+				model: 'Item',
+			},
+		], */
+	})
+	res.send(lists)
 })
