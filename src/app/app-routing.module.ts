@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
 import { ItemComponent } from './item/item.component';
 import { LibraryComponent } from './library/library.component';
+import { ListComponent } from './list/list.component';
 
 const routes: Routes = [
 	{ path: 'create-account', component: CreateAccountComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent },
 	{ path: 'profile', component: DashboardComponent },
 	{ path: 'item/:id', component: ItemComponent},
+	{ path: 'list/:id', component: ListComponent},
 	{ path: 'search', component: ItemSearchComponent },
 	{ path: 'library', component: LibraryComponent },
 ];
