@@ -1,14 +1,4 @@
-<!-- <p>list works</p> -->
-
 <div class="flex flex-col gap-2">
 	<h3>{{list?.name}}</h3>
-	<a *ngFor="let item of list?.items" href="/item/{{list?._id}}"
-		class="flex gap-2 no-underline hover:bg-slate-200 rounded-xl p-2">
-		<div [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item.image1 + '\')'}" alt="Photo"
-			class="rounded-lg w-14 h-14 bg-cover"></div>
-		<div class="flex flex-col">
-			<div>{{item.name}} <span class="rounded-lg p-2 text-xs bg-slate-400">{{item.type}}</span>
-			</div>
-		</div>
-	</a>
+	<app-item-preview *ngFor="let item of list?.items" [item]="item"></app-item-preview>
 </div>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Item } from '../types/Item';
 import { Router } from '@angular/router';
 import { List } from '../types/List';
 import { ListService } from '../list.service';
@@ -19,13 +18,8 @@ export class ListComponent {
 		const id = this.router.url.split('/').pop()!
 		this.listService.get(id).subscribe((result) => {
 			const { error, ...list } = result
-/* 			if (error) {
-				this.error = error
-				return
-			} */
 			this.list = list
-			console.log(list);
-			
+
 		})
 	}
 }
