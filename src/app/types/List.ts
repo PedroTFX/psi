@@ -5,9 +5,8 @@ import { User } from "./User"
 export type List = {
 	_id?: string;
 	name: string;
-	games: Item[];
+	items: Item[];
 	description: string;
 	followers: User[];
 	owner: User;
-
 }
