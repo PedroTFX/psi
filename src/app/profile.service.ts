@@ -16,11 +16,7 @@ export class ProfileService {
 
 	constructor(private http: HttpClient) { }
 
-	getProfile() {
-		throw new Error('Method not implemented.');
-	}
-
-	get(): Observable<Profile & { error?: string }> {
-		return this.http.get<Profile & { error?: string }>(`${api}/profile`, this.httpOptions)
+	get(id: string): Observable<Profile & { error?: string }> {
+		return this.http.get<Profile & { error?: string }>(`${api}/profile/${id}`, this.httpOptions)
 	}
 }
