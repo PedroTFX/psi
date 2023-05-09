@@ -13,6 +13,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ItemSearchComponent } from './item-search/item-search.component';
 import { ItemComponent } from './item/item.component';
 import { LibraryComponent } from './library/library.component';
+import { ListComponent } from './list/list.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +26,8 @@ import { LibraryComponent } from './library/library.component';
 		ItemSearchComponent,
 		ItemComponent,
 		ItemComponent,
-		LibraryComponent
+		LibraryComponent,
+  ListComponent
 	],
 	imports: [
 		BrowserModule,
