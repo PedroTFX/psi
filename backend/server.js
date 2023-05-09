@@ -226,14 +226,32 @@ app.get('/api/list/:id', async (req, res) => {
 		return res.send({ error: "You are not logged in" })
 	}
 
-		const lists = await ItemList.findOne({ _id: req.params.id }).populate({
+	const lists = await ItemList.findOne({ _id: req.params.id }).populate({
 		path: 'items',
-/* 		populate:[
-			{
-				path: 'items',
-				model: 'Item',
-			},
-		], */
 	})
 	res.send(lists)
+})
+
+app.get('/api/profile/:id', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+
+	const profile = await Profile.findOne({ _id: req.params.id }).populate([{
+		path: 'library',
+		populate: {
+			path: 'item',
+			model: 'Item',
+			populate: {
+				path: 'reviews',
+				model: 'Review'
+			},
+		},
+	},
+	{
+		path: 'lists',
+		populate: { path: 'items', model: 'Item' },
+	}, 'following', 'followers', 'wishlist'])
+	res.send(profile)
 })
