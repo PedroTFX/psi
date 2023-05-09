@@ -11,7 +11,6 @@ export class LoginComponent {
 	username = ''
 	password = ''
 	formError = ''
-
 	constructor(private userService: UserService, private router: Router) { }
 
 	login() {
@@ -22,10 +21,19 @@ export class LoginComponent {
 			if (result.user) {
 				localStorage.setItem('currentUser', result.user.id)
 				window.dispatchEvent(new Event('storage'))
-				this.router.navigate(['/dashboard'])
-			}
+				this.router.navigate(['/dashboard'])}
 		})
+	}
+
+
+	containsUppercase(str: string) {
+		return /[A-Z]/.test(str)
+	}
+	containsLowercase(str: string) {
+		return /[a-z]/.test(str)
+	}
+	containsNumber(str: string) {
+		return /[0-9]/.test(str)
 	}
 }
 
-//US10 FEITO E LOGOUT RESOLVIDO
