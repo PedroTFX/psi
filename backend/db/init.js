@@ -116,6 +116,8 @@ const init = async (req, res) => {
 	const newPurchases = await Purchase.insertMany([
 		{ userId: newUsers[0]._id, item: newItems[0]._id, date: new Date(new Date().setDate(new Date().getDate() - 1)) },
 		{ userId: newUsers[0]._id, item: newItems[1]._id, date: new Date(new Date().setDate(new Date().getDate() - 2)) },
+		{ userId: newUsers[1]._id, item: newItems[1]._id, date: new Date(new Date().setDate(new Date().getDate() - 11)) },
+		{ userId: newUsers[1]._id, item: newItems[2]._id, date: new Date(new Date().setDate(new Date().getDate() - 10)) },
 	])
 
 
@@ -135,8 +137,8 @@ const init = async (req, res) => {
 			userId: newUsers[1]._id, // Diogo
 			username: newUsers[1].username,
 			image: await fs.readFile('./backend/db/users/user2.jpeg', { encoding: 'base64' }),
-			library: [], // CS 1.6 e WOW
-			lists: [],
+			library: [newPurchases[0]._id, newPurchases[1]._id], // CS 1.6 e WOW
+			lists: [newItemLists[1]._id],
 			followers: [],
 			following: [],
 			wishlist: []
