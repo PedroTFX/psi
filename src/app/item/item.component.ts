@@ -17,6 +17,8 @@ export class ItemComponent {
 	ngOnInit() {
 		const id = this.router.url.split('/').pop()!
 		this.itemService.get(id).subscribe((result) => {
+			console.log(result)
+
 			const { error, ...item } = result
 			if(error) {
 				this.error =  error
