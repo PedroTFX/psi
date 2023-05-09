@@ -7,12 +7,14 @@ import { ItemSearchComponent } from './item-search/item-search.component';
 import { ItemComponent } from './item/item.component';
 import { LibraryComponent } from './library/library.component';
 import { ListComponent } from './list/list.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
 	{ path: 'create-account', component: CreateAccountComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'dashboard', component: DashboardComponent },
 	{ path: 'profile', component: DashboardComponent },
+	{ path: 'profile/:id', component: ProfileComponent },
 	{ path: 'item/:id', component: ItemComponent},
 	{ path: 'list/:id', component: ListComponent},
 	{ path: 'search', component: ItemSearchComponent },

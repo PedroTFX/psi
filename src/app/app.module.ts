@@ -14,6 +14,9 @@ import { ItemSearchComponent } from './item-search/item-search.component';
 import { ItemComponent } from './item/item.component';
 import { LibraryComponent } from './library/library.component';
 import { ListComponent } from './list/list.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ItemPreviewComponent } from './item-preview/item-preview.component';
+import { PurchasePreviewComponent } from './purchase-preview/purchase-preview.component';
 
 @NgModule({
 	declarations: [
@@ -27,7 +30,10 @@ import { ListComponent } from './list/list.component';
 		ItemComponent,
 		ItemComponent,
 		LibraryComponent,
-  ListComponent
+		ListComponent,
+		ProfileComponent,
+		ItemPreviewComponent,
+  PurchasePreviewComponent
 	],
 	imports: [
 		BrowserModule,
