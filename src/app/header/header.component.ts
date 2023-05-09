@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 	loggedIn: boolean = false
+	menuOpen: boolean = false
 
 	constructor(private router: Router, private userService: UserService) { }
 
@@ -20,11 +21,20 @@ export class HeaderComponent {
 	}
 
 	logout() {
+		this.menuOpen = false
 		this.userService.logout().subscribe((result) => {
 			localStorage.removeItem('currentUser')
 			this.loggedIn = false
 			this.router.navigate([''])
 		})
+	}
+
+	toggleMenu() {
+		this.menuOpen = !this.menuOpen
+	}
+
+	closeMenu() {
+		this.menuOpen = false
 	}
 }
 

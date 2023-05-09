@@ -1,18 +1,24 @@
-<header class="flex justify-between gap-4">
-	<a [routerLink]="'/dashboard'" class="mr-auto p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Steam dos Pobres</a>
+<header class="flex justify-between gap-4 h-10 items-center">
+	<a [routerLink]="'/'" class="mr-auto p-4">Steam dos Pobres</a>
+	<div *ngIf="loggedIn" class="p-2 hover:cursor-pointer" (click)="toggleMenu()">
+		<img *ngIf="!menuOpen" src="assets/hamburger_open.svg" alt="Open menu" />
+		<img *ngIf="menuOpen" src="assets/hamburger_close.svg" alt="Close menu" />
+	</div>
 	<ng-container *ngIf="loggedIn; then isLoggedIn; else isNotLoggedIn"></ng-container>
 </header>
 
 <ng-template #isNotLoggedIn>
-	<a [routerLink]="'/login'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Login</a>
-	<a [routerLink]="'/create-account'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Create account</a>
+	<a [routerLink]="'/login'" class="p-4">Login</a>
+	<a [routerLink]="'/create-account'" class="p-4">Create account</a>
 </ng-template>
 
 <ng-template #isLoggedIn>
-	<a [routerLink]="'/dashboard'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Dashboard</a>
-	<a [routerLink]="'/library'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Library</a>
-	<a [routerLink]="'/profile'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Profile</a>
-	<a [routerLink]="'/search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">Search</a>
-	<a [routerLink]="'/user-search'" class="p-4 bg-sky-200 hover:bg-sky-900 hover:text-white">User Search</a>
-	<span class="text-white p-4 bg-sky-200 hover:bg-sky-900 hover:text-white" (click)="logout()">Logout</span>
+	<div *ngIf="menuOpen" class="bg-white fixed left-0 top-10 h-[calc(100%-40px)] w-screen flex flex-col justify-start items-center">
+		<a [routerLink]="'/dashboard'" (click)="closeMenu()" class="p-4 w-full text-center border-b hover:bg-slate-100">Dashboard</a>
+		<a [routerLink]="'/library'" (click)="closeMenu()" class="p-4 w-full text-center border-b hover:bg-slate-100">Library</a>
+		<a [routerLink]="'/profile'" (click)="closeMenu()" class="p-4 w-full text-center border-b hover:bg-slate-100">Profile</a>
+		<a [routerLink]="'/search'" (click)="closeMenu()" class="p-4 w-full text-center border-b hover:bg-slate-100">Search</a>
+		<a [routerLink]="'/user-search'" (click)="closeMenu()" class="p-4 w-full text-center border-b hover:bg-slate-100">User Search</a>
+		<span (click)="logout()" class="p-4 w-full text-center border-b hover:bg-slate-100 hover:cursor-pointer">Logout</span>
+	</div>
 </ng-template>
