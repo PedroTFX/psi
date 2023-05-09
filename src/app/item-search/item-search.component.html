@@ -6,9 +6,9 @@
 <div class="prose">
 	<h2>Search Results</h2>
 	<ul *ngIf="items.length > 0">
-		<li *ngFor="let item of items">
+		<p *ngFor="let item of items">
 			<a [routerLink]="['/', 'item', item._id]">{{ item.name }}</a>
-		</li>
+		</p>
 	</ul>
 	<p *ngIf="items.length == 0">No games found</p>
 </div>
