@@ -1,5 +1,4 @@
 <div class="prose">
-	<h2>Dashboard</h2>
 	<div *ngIf="dashboard != null">
 		<h2 class="flex gap-4 items-center">
 			<div *ngIf="dashboard.image"
@@ -7,34 +6,19 @@
 				class="rounded-full w-10 h-10 bg-cover"></div> {{dashboard.username}}
 		</h2>
 		<h3>Biblioteca</h3>
-		<ng-container
-			*ngIf="dashboard.library.length > 0; then hasPurchasedGames; else noPurchasedGames"></ng-container>
+		<ng-container *ngIf="dashboard.library.length > 0; then hasPurchasedGames; else noPurchasedGames"></ng-container>
 		<h3>Listas de jogos</h3>
 		<p *ngFor="let list of dashboard.lists"><a href="/list/{{list._id}}">{{ list.name }}</a></p>
 		<h3>Jogadores que estamos a seguir</h3>
-		<ul>
-			<li *ngFor="let profile of dashboard.following"><a href="/profile/{{profile._id}}">{{ profile.username
-					}}</a></li>
-		</ul>
+		<p *ngFor="let profile of dashboard.following"><a href="/profile/{{profile._id}}">{{profile.username}}</a></p>
 		<h3>Jogadores que nos seguem</h3>
-		<ul>
-			<li *ngFor="let profile of dashboard.followers"><a href="/profile/{{profile._id}}">{{ profile.username
-					}}</a></li>
-		</ul>
+		<p *ngFor="let profile of dashboard.followers"><a href="/profile/{{profile._id}}">{{profile.username}}</a></p>
 	</div>
 </div>
 
-
 <ng-template #hasPurchasedGames>
 	<div class="flex flex-col gap-2">
-		<a *ngFor="let purchase of dashboard?.library" href="/item/{{purchase.item._id}}" class="flex gap-2 no-underline hover:bg-slate-200 rounded-xl p-2">
-			<div [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + purchase.item.image1 + '\')'}"
-				alt="Photo" class="rounded-lg w-14 h-14 bg-cover"></div>
-			<div class="flex flex-col">
-				<div>{{purchase.item.name}} <span class="rounded-lg p-2 text-xs bg-slate-400">{{purchase.item.type}}</span></div>
-				<div>{{'⭐️'.repeat(averageScore(purchase.item))}}</div>
-			</div>
-		</a>
+		<app-item-preview *ngFor="let purchase of dashboard?.library" [item]="purchase.item"></app-item-preview>
 	</div>
 </ng-template>
 

@@ -24,8 +24,4 @@ export class DashboardComponent {
 			this.dashboard = dashboard
 		})
 	}
-
-	averageScore(item: Item) {
-		return item.reviews.reduce((prev, curr) => prev + curr.score, 0) / item.reviews.length
-	}
 }
