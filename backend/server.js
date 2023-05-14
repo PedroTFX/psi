@@ -30,7 +30,7 @@ app.use(cookieSession({
 }))
 
 // Connect to DB
-const productionDB = true
+const productionDB = false
 const prodDBConnectionString = 'mongodb://psi005:psi005@appserver.alunos.di.fc.ul.pt:27017/psi005?retryWrites=true&authSource=psi005'
 const devDBConnectionString = 'mongodb://127.0.0.1:27017/ex04'
 const connectDatabase = async () => {
