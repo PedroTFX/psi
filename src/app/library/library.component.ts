@@ -24,7 +24,6 @@ export class LibraryComponent {
 			console.log(this.library[0].date);
 			console.log(this.library[1].date);
 
-
 			const result = this.library.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 			console.log(result);
 

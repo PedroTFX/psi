@@ -28,12 +28,6 @@
 				alt="Photo" class="rounded-lg w-32 h-32 bg-cover"></div>
 			<div *ngIf="item?.image3" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image3 + '\')'}"
 				alt="Photo" class="rounded-lg w-32 h-32 bg-cover"></div>
-			<!-- <div class="rounded-lg w-32 h-32 bg-cover">
-				<iframe src="{{'https://www.youtube.com/embed/' + item?.videoURL?.split('/')?.pop()}}"
-					title="Rick Astley - Never Gonna Give You Up (Official Music Video)" frameborder="0"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-					allowfullscreen></iframe>
-			</div> -->
 		</div>
 		<p><a href="{{item?.videoURL}}" target="_blank">Video</a></p>
 
