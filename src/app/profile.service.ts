@@ -8,9 +8,6 @@ import { api } from './constants';
 	providedIn: 'root'
 })
 export class ProfileService {
-	getProfile() {
-		throw new Error('Method not implemented.');
-	}
 
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -19,7 +16,7 @@ export class ProfileService {
 
 	constructor(private http: HttpClient) { }
 
-	get(): Observable<Profile & { error?: string }> {
-		return this.http.get<Profile & { error?: string }>(`${api}/profile`, this.httpOptions)
+	get(id: string): Observable<Profile & { error?: string }> {
+		return this.http.get<Profile & { error?: string }>(`${api}/profile/${id}`, this.httpOptions)
 	}
 }

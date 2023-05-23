@@ -1,33 +1,25 @@
 <div class="prose">
-	<h2>Dashboard</h2>
 	<div *ngIf="dashboard != null">
-		<h2>{{dashboard.username}}</h2>
-		<img *ngIf="dashboard.image" [src]="dashboard.image" alt="Photo">
-		<h3>Jogos Comprados</h3>
+		<h2 class="flex gap-4 items-center">
+			<div *ngIf="dashboard.image"
+				[ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + dashboard.image + '\')'}" alt="Photo"
+				class="rounded-full w-10 h-10 bg-cover"></div> {{dashboard.username}}
+		</h2>
+		<h3>Biblioteca</h3>
 		<ng-container *ngIf="dashboard.library.length > 0; then hasPurchasedGames; else noPurchasedGames"></ng-container>
 		<h3>Listas de jogos</h3>
-		<div *ngFor="let list of dashboard.lists">
-			<h3>{{ list.name }}</h3>
-			<ul>
-				<li *ngFor="let game of list.games">{{ game.name }}</li>
-			</ul>
-		</div>
+		<p *ngFor="let list of dashboard.lists"><a href="/list/{{list._id}}">{{ list.name }}</a></p>
 		<h3>Jogadores que estamos a seguir</h3>
-		<ul>
-			<li *ngFor="let profile of dashboard.following">{{ profile.username }}</li>
-		</ul>
+		<p *ngFor="let profile of dashboard.following"><a href="/profile/{{profile._id}}">{{profile.username}}</a></p>
 		<h3>Jogadores que nos seguem</h3>
-		<ul>
-			<li *ngFor="let profile of dashboard.followers">{{ profile.username }}</li>
-		</ul>
+		<p *ngFor="let profile of dashboard.followers"><a href="/profile/{{profile._id}}">{{profile.username}}</a></p>
 	</div>
 </div>
 
-
 <ng-template #hasPurchasedGames>
-	<ul>
-		<li *ngFor="let game of dashboard?.library">{{ game.name }}</li>
-	</ul>
+	<div class="flex flex-col gap-2">
+		<app-item-preview *ngFor="let purchase of dashboard?.library" [item]="purchase.item"></app-item-preview>
+	</div>
 </ng-template>
 
 <ng-template #noPurchasedGames>

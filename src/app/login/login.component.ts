@@ -8,26 +8,32 @@ import { UserService } from '../user.service';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-	username = '';
-	password = '';
-	formError = '';
-
-	constructor(private userService: UserService, private router: Router) {}
+	username = ''
+	password = ''
+	formError = ''
+	constructor(private userService: UserService, private router: Router) { }
 
 	login() {
-		const user = { username: this.username, password: this.password };
+		const user = { username: this.username, password: this.password }
 
 		this.userService.login(user).subscribe((result: any) => {
-			this.formError = result.formError || '';
-
+			this.formError = result.formError || ''
 			if (result.user) {
-				console.log(result.user);
-				
-				// Store the current user's ID in local storage
-				localStorage.setItem('currentUser', result.user.id);
-				
-				this.router.navigate(['/dashboard']);
-			}
-		});
+				localStorage.setItem('currentUser', result.user.id)
+				window.dispatchEvent(new Event('storage'))
+				this.router.navigate(['/dashboard'])}
+		})
+	}
+
+
+	containsUppercase(str: string) {
+		return /[A-Z]/.test(str)
+	}
+	containsLowercase(str: string) {
+		return /[a-z]/.test(str)
+	}
+	containsNumber(str: string) {
+		return /[0-9]/.test(str)
 	}
 }
+

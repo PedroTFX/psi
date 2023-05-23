@@ -1,0 +1,6 @@
+<div *ngIf="purchase" [routerLink]="['/', 'item', purchase.item._id]" class="text-black no-underline flex gap-2 items-start">
+	<app-item-preview class="flex-grow" [item]="purchase.item"></app-item-preview>
+	<span class="bg-slate-400 rounded-lg p-2 text-xs">{{purchase.date}}</span>
+</div>
+
+

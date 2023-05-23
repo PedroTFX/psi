@@ -22,4 +22,8 @@ export class UserService {
 	login(user: User): Observable<any> {
 		return this.http.post<User>(`${api}/login`, user, this.httpOptions)
 	}
+
+	logout(): Observable<any> {
+		return this.http.get(`${api}/logout`, this.httpOptions)
+	}
 }

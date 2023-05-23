@@ -6,14 +6,16 @@
   * It contains the routes and the database connection.
   *
  */
+
 const express = require('express')
 const mongoose = require('mongoose')
-const { User } = require('./models/UserModel')
-const { Profile } = require('./models/ProfileModel')
-const { Game } = require('./models/GameModel')
-const { GameList } = require('./models/GameListModel')
+const { User } = require('./models/User')
+const { Profile } = require('./models/Profile')
+const { Item } = require('./models/Item')
+const { ItemList } = require('./models/ItemList')
 var cookieSession = require('cookie-session')
 const cors = require('cors')
+const init = require('./db/init')
 
 const app = express()
 const port = 3055
@@ -28,7 +30,7 @@ app.use(cookieSession({
 }))
 
 // Connect to DB
-const productionDB = true
+const productionDB = false
 const prodDBConnectionString = 'mongodb://psi005:psi005@appserver.alunos.di.fc.ul.pt:27017/psi005?retryWrites=true&authSource=psi005'
 const devDBConnectionString = 'mongodb://127.0.0.1:27017/ex04'
 const connectDatabase = async () => {
@@ -40,79 +42,9 @@ const connectDatabase = async () => {
 }
 connectDatabase()
 
-app.get('/api/init', async (req, res) => {
-	// Delete DB
-	await User.deleteMany();
-	await Profile.deleteMany();
-	await Game.deleteMany();
-	await GameList.deleteMany();
+app.get('/api/init', init);
 
-	// Seed DB
-	const newUsers = await User.insertMany([
-		{ username: 'Lucas', password: "Lucas1234" },
-		{ username: 'Diogo', password: "Diogo4321" }
-	], { lean: true })
-
-	const newGames = await Game.insertMany([
-		{ name: "League of Legends" },
-		{ name: "CS:GO" },
-		{ name: "CS 1.6" },
-		{ name: "Super Tux" },
-	], { lean: true })
-
-	const lucasLists = await GameList.insertMany([
-		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
-		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
-	])
-	const diogoLists = await GameList.insertMany([
-		{ userId: newUsers[0]._id, name: "Completed", games: [newGames[0]._id, newGames[1]._id] },
-		{ userId: newUsers[0]._id, name: "FPS", games: [newGames[1]._id, newGames[2]._id] }
-	])
-
-	// Create profiles
-	const lucasProfile = new Profile({
-		userId: newUsers[0]._id,
-		username: newUsers[0].username,
-		image: '',
-		library: [newGames[0]._id, newGames[1]._id],
-		lists: [lucasLists[0]._id, lucasLists[1]._id],
-		followers: [],
-		following: []
-	})
-	const createdLucasProfile = await lucasProfile.save()
-	const diogoProfile = new Profile({
-		userId: newUsers[1]._id,
-		username: newUsers[1].username,
-		image: '',
-		library: [newGames[2]._id, newGames[3]._id],
-		lists: [diogoLists[0]._id, diogoLists[1]._id],
-		followers: [],
-		following: []
-	})
-	const createdDiogoProfile = await diogoProfile.save()
-
-	// Add Diogo as Lucas's follower
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		followers: [createdDiogoProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		following: [createdLucasProfile._id]
-	})
-
-	// Add Lucas as Diogo's follower
-	await Profile.findByIdAndUpdate(createdDiogoProfile._id, {
-		followers: [createdLucasProfile._id]
-	})
-	await Profile.findByIdAndUpdate(createdLucasProfile._id, {
-		following: [createdDiogoProfile._id]
-	})
-
-	res.send("Database seeded");
-});
-
-app.get('/api', async (req, res) => {
-	res.send('Hello World!')
-})
+app.get('/api', async (req, res) => res.send('Hello World!'))
 
 app.post('/api/create-account', async (req, res) => {
 	const { username, password } = req.body
@@ -174,8 +106,21 @@ app.post('/api/create-account', async (req, res) => {
 	const user = new User({ username, password })
 	const newUser = await user.save()
 
-	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [] })
+	if (!newUser) {
+		return res.send({
+			formError: 'Erro ao criar conta'
+		})
+	}
+
+	const profile = new Profile({ userId: newUser._id, username: newUser.username, image: '', library: [], lists: [], wishlist: [] })
+	//const profile = new Profile({ userId: user._id, username: user.username, image: '', library: [], lists: [], wishlist: [] })
 	const newProfile = await profile.save()
+
+	if (!newProfile) {
+		return res.send({
+			formError: 'Erro ao criar conta'
+		})
+	}
 
 	return res.send({ user: newUser, profile: newProfile })
 })
@@ -197,6 +142,12 @@ app.post("/api/login", async (req, res) => {
 	res.send({ user: userWithoutPassword })
 })
 
+app.get("/api/logout", async (req, res) => {
+	res.clearCookie('session')
+	res.clearCookie('session.sig')
+	res.send({ ok: 'You have been logged out' })
+})
+
 app.get("/api/profile", async (req, res) => {
 	const { username } = req.session
 	if (!username) {
@@ -204,7 +155,10 @@ app.get("/api/profile", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate('library')
+	const profile = await Profile.findOne({ userId: user._id }).populate([{
+		path: 'library',
+		populate: 'item'
+	}, 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
@@ -215,54 +169,89 @@ app.get("/api/dashboard", async (req, res) => {
 	}
 
 	const user = await User.findOne({ username }).lean()
-	const profile = await Profile.findOne({ userId: user._id }).populate([
-		'library',
-		{
-			path: 'lists',
+	const profile = await Profile.findOne({ userId: user._id }).populate([{
+		path: 'library',
+		populate: {
+			path: 'item',
+			model: 'Item',
 			populate: {
-				path: 'games',
-				model: 'Game'
-			}
+				path: 'reviews',
+				model: 'Review'
+			},
 		},
-		'followers',
-		'following'
-	])
-
+	}, 'lists', 'following', 'followers', 'wishlist'])
 	res.send(profile)
 })
 
-app.get("/api/secure", async (req, res) => {
+app.get("/api/item/:id", async (req, res) => {
 	const { username } = req.session
 	if (!username) {
-		return res.send("You are not logged in")
+		return res.send({ error: "You are not logged in" })
 	}
 
-	return res.send(`${username} is logged in.`)
+	const itemWithReviewsAndReviewComments = await Item.findById(req.params.id).populate({
+		path: 'reviews',
+		populate: [
+			{ path: 'userId', model: 'User' },
+			{
+				path: 'comments',
+				model: 'ReviewComment',
+				populate: { path: 'userId', model: 'User' }
+			},
+		]
+	}).lean()
+	res.send(itemWithReviewsAndReviewComments)
+})
+app.get('/api/search', async (req, res) => {
+	const query = req.query.q
+	console.log(query)
+	if (query == undefined || query.length == 0) return res.status(400)
+	const items = await Item.find({ name: new RegExp(`${query}`, 'i') }).populate('reviews')
+	res.send(items)
+})
+app.get('/api/library', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+	const { library } = await Profile.findOne({ username }).populate([{
+		path: 'library',
+		populate: 'item'
+	}])
+	res.send(library)
+})
+app.get('/api/list/:id', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
+	}
+
+	const lists = await ItemList.findOne({ _id: req.params.id }).populate({
+		path: 'items',
+	})
+	res.send(lists)
 })
 
-app.get('/api/search', async (req, res) => {
-	const searchQuery = req.query.q;
-	console.log(searchQuery);
-	if (searchQuery.length == 0 || searchQuery == undefined) {
-		console.log('empty search query');
-		res.send([]);
-		return;
+app.get('/api/profile/:id', async (req, res) => {
+	const { username } = req.session
+	if (!username) {
+		return res.send({ error: "You are not logged in" })
 	}
-	try {
-		const profiles = await Profile.find({ username: { $regex: searchQuery, $options: 'i' } }).populate('userId', 'name email');
-		const games = await Game.find({ name: { $regex: searchQuery, $options: 'i' } });
-		const gameLists = await GameList.find({ name: { $regex: searchQuery, $options: 'i' } }).populate('games');
 
-		const searchResults = {
-			profiles,
-			games,
-			gameLists
-		};
-		res.json(searchResults);
-	} catch (error) {
-		res.status(500).json({ message: 'An error occurred while searching for results.' });
-	}
-});
-
-
-
+	const profile = await Profile.findOne({ _id: req.params.id }).populate([{
+		path: 'library',
+		populate: {
+			path: 'item',
+			model: 'Item',
+			populate: {
+				path: 'reviews',
+				model: 'Review'
+			},
+		},
+	},
+	{
+		path: 'lists',
+		populate: { path: 'items', model: 'Item' },
+	}, 'following', 'followers', 'wishlist'])
+	res.send(profile)
+})

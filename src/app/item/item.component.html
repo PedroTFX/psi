@@ -1,0 +1,47 @@
+<div class="prose">
+	<ng-container *ngIf="item == null; then isLoading; else hasItem"></ng-container>
+</div>
+
+<ng-template #isLoading>
+	<p>Loading...</p>
+</ng-template>
+
+<ng-template #hasItem>
+	<h3>{{item?.name}} <span class="rounded-lg p-2 text-xs bg-slate-400">{{item?.type}}</span></h3>
+
+	<div>
+
+		<div class="flex gap-4">
+			<div *ngIf="item?.image1" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image1 + '\')'}" alt="Photo" class="flex-grow rounded-lg w-full h-48 bg-cover"></div>
+			<div class="flex flex-col justify-start gap-2">
+				<div class="flex gap-2">
+					<span *ngFor="let platform of item?.platform" class="rounded-lg p-2 text-xs bg-slate-400">{{platform}}</span>
+				</div>
+				<div class="flex gap-2">
+					<span *ngFor="let language of item?.languages" class="p-2 text-xs">{{language}}</span>
+				</div>
+				<div class="mt-auto ml-auto">{{item?.price == 0 ? 'Free' : item?.price + '€'}}</div>
+			</div>
+		</div>
+		<div class="flex gap-4 my-4">
+			<div *ngIf="item?.image2" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image2 + '\')'}"
+				alt="Photo" class="rounded-lg w-32 h-32 bg-cover"></div>
+			<div *ngIf="item?.image3" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + item?.image3 + '\')'}"
+				alt="Photo" class="rounded-lg w-32 h-32 bg-cover"></div>
+		</div>
+		<p><a href="{{item?.videoURL}}" target="_blank">Video</a></p>
+
+		<div class="">
+			<div class="">{{item?.description}}</div>
+		</div>
+
+		<h4>Reviews</h4>
+		<div class="flex gap-4">
+			<div *ngFor="let review of item?.reviews" class="shadow-xl rounded-xl p-4">
+				<p><b>{{review.userId.username}}</b> <span>{{'⭐️'.repeat(review.score)}}</span></p>
+				<p>{{review.comment}}</p>
+			</div>
+		</div>
+	</div>
+
+</ng-template>

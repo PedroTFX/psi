@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Profile } from '../types/Profile';
 import { DashboardService } from '../dashboard.service';
+import { CommonModule } from '@angular/common';
+import { Item } from '../types/Item';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
 	dashboard: Profile | null = null;
@@ -20,8 +22,6 @@ export class DashboardComponent {
 				this.router.navigate(['/login'])
 			}
 			this.dashboard = dashboard
-			console.log(dashboard)
-
 		})
 	}
 }

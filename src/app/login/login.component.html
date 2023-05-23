@@ -4,9 +4,29 @@
 
 	<label>Username</label>
 	<input type="text" name="username" class="border rounded-full px-2" required minlength="3" [(ngModel)]="username" />
+	<div class="flex justify-end">
+		<p [ngClass]="{'text-green-500': username.length >= 3}" class="rounded-lg text-xs m-0 text-right px-2 py-1">min
+			{{username.length}}/3
+			caracteres</p>
+	</div>
 
 	<label class="mt-7">Password</label>
 	<input type="password" name="password" class="border rounded-full px-2" required minlength="8" [(ngModel)]="password" />
+	<div class="flex justify-end">
+		<p [ngClass]="{'text-green-500': password.length >= 8}" class="rounded-lg text-xs m-0 text-right px-2 py-1">min
+			{{password.length}}/8
+			caracteres</p>
+		<p [ngClass]="{'text-green-500': containsUppercase(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">
+			At least 1 uppercase</p>
+		<p [ngClass]="{'text-green-500': containsLowercase(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">
+			At least 1 lowercase</p>
+		<p [ngClass]="{'text-green-500': containsNumber(password)}" class="rounded-lg text-xs m-0 text-right px-2 py-1">At
+			least 1 number</p>
+	</div>
+	<p *ngIf="formError" class="p-2 bg-red-50 text-red-500 rounded-lg"> Combinacao email/password incorreta!</p>
 
-	<button type="button" class="bg-sky-800 rounded-full text-white p-2 mt-7" (click)="login()">login</button>
+	<button type="button" (click)="login()"
+		class="bg-sky-800 rounded-full mt-7 text-white p-2 disabled:bg-slate-400"
+		[disabled]="username.length < 3 || password.length < 8 || !containsUppercase(password) || !containsLowercase(password) || !containsNumber(password)">Entrar</button>
 </form>
+

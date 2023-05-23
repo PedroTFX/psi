@@ -1,13 +1,12 @@
-<h2>Profile</h2>
-<div *ngIf="profile != null">
-	<h2>{{profile.username}}</h2>
-	<img [src]="profile.image" alt="Photo">
-	<h3>Game Lists:</h3>
-	<ul>
-		<li *ngFor="let game of profile.lists">{{ game.name }}</li>
-	</ul>
-	<h3>Library:</h3>
-	<ul>
-		<li *ngFor="let game of profile.library">{{ game.name }}</li>
-	</ul>
+<div class="prose">
+	<div *ngIf="profile?.image" [ngStyle]="{'background-image': 'url(\'data:image/png;base64,' + profile?.image + '\')'}"
+		alt="Photo" class="rounded-full w-10 h-10 bg-cover"></div> {{profile?.username}}
+	<h2>Listas de jogos</h2>
+	<div *ngFor="let list of profile?.lists">
+		<h3><a href="/list/{{list._id}}">{{ list.name }}</a></h3>
+		<div class="flex flex-col gap-2">
+			<app-item-preview *ngFor="let item of list.items" [item]="item"></app-item-preview>
+		</div>
+	</div>
 </div>
+

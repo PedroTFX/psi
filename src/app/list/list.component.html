@@ -1,0 +1,4 @@
+<div class="flex flex-col gap-2">
+	<h3>{{list?.name}}</h3>
+	<app-item-preview *ngFor="let item of list?.items" [item]="item"></app-item-preview>
+</div>
